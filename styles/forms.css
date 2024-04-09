@@ -1,0 +1,62 @@
+
+/* -----  Выравнивание всего содержимого по середине  ----- */
+.dws-form {
+	
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	height: 100vh;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	border-radius: 10px;outline: 1px solid orange;
+}
+
+.tab-form[id="11form-scenario-set"] div.range_Bright {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: center;
+}
+
+/* ----- Вид для всех форм ----- */
+	.tab-form {
+		 display: none;  /* ---------  скрыть все формы  */
+		/* background-color: rgba(255, 255, 255, 0.1);     - задний фон для всех форм */
+
+		padding: 20px 200px 40px;
+		font-weight: 600;
+		border: 2px;
+		border-radius: 10px;outline: 1px solid orange;  /*  временная рамка - удалить  */
+		position: relative;
+	}
+
+		/* ----- Форма Настройки приложения ----- */
+		.tab-form[id="8form-app-settings"] div {
+			position: relative;
+			top: 0;
+			left: -20px;
+		}
+			.tab-form[id="10form-stair-settings"] div {
+				width: 400px;
+				position: relative;
+				top: 0;
+				left: -70px;
+			}
+				.tab-form[id="11form-scenario-set"] div {
+					width: 400px;
+					position: relative;
+					top: 0;
+					left: -100px;
+				}
+					.tab-form[id="10form-stair-settings"],
+					.tab-form[id="11form-scenario-set"] {
+						width: 260px;
+					}
+/* ----- Временный блок - скрытие формы ----- 
+.tab-form[id="form-general"] {
+	display: block;
+} */
+
+
+

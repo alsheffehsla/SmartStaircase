@@ -1,0 +1,174 @@
+/* ----- Общий вид ----- */
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Roboto, sans-serif;
+	background-image: url('../images/fon.jpg');
+	-webkit-background-size: cover;
+	background-size: cover;
+}
+
+hr {
+	width: 400px;
+	margin: 30px auto;
+	border: 3px solid #9998ff;
+}
+
+/* ----- Вид заголовков ----- */
+h5 {
+	font-weight: 800;
+	outline: 1px solid orange;
+	margin-bottom: 15rem;
+	width: fit-content;
+}
+	h4 {
+		font-weight: 700;
+		color: #FF0080;
+		outline: 1px solid orange;
+		margin-top: 1rem;
+	}
+		h3 {
+			font-weight: 800;
+			color: #FF0080;
+			outline: 1px solid orange;
+			position: absolute;
+			z-index: 100;
+		}
+		
+			.tab-form[id="8form-app-settings"] h5 {
+				margin-bottom: 8rem;
+			}
+				/* если совпадает с начальным - удалить!!! */
+				.tab-form[id="9form-menu-stair"] h5 {
+					margin-bottom: 15rem;
+				}
+					.tab-form[id="10form-stair-settings"] h5 {
+						margin-bottom: 3rem;
+					}
+						.tab-form[id="11form-scenario-set"] h5 {
+							margin-bottom: 3rem;
+						}
+
+/* ----- Основной вид red сообщений ----- */
+ .red-msg {
+	font-weight: 800;
+	font-size: 30px;
+	color: #FF0080;
+	position: absolute;
+	opasity: 1;
+	visibility: visible;
+	left: 6em;
+    top: 6em;
+	transition: all 1.5s;
+}
+	/* ----- Дополнительный вид red сообщений ----- */
+	.red-msg {
+		left: 5em;
+		top: 6em;
+		transition: none;
+	}
+	
+.wp {
+	font-weight: 800;
+	font-size: 30px;
+	color: #FF0080;
+	position: absolute;
+	opasity: 0; 
+/*	visibility: visible; */
+	left: 6em;
+	top: 6em;
+/*	transition: all 1.5s; */
+	animation: blinker 3s linear infinite;
+}
+	/* ----- Анимация red сообщения ----- */
+	.tab-form.wp{
+		color: rgba(255,00,128,0.0);
+/*		opasity: 1;
+		visibility: hidden;
+		transition: all 3.5s; */
+	}
+		.wp[id='none_pass']{
+			left: 6.5em;
+		}
+.wc {
+	font-weight: 800;
+	font-size: 30px;
+	color: #FF0080;
+	position: absolute;
+	opasity: 0; 
+/*	visibility: visible; */
+	left: 7em;
+	top: 6em;
+/*	transition: all 1.5s; */
+	animation: blinker 3s linear infinite;
+}
+	/* ----- Анимация red сообщения ----- */
+	.tab-form.wc{
+		color: rgba(255,00,128,0.0);
+/*		opasity: 1;
+		visibility: hidden;
+		transition: all 3.5s; */
+	}	
+	
+@keyframes blinker {
+	50% {
+		opacity: 0;
+	}
+}
+
+/* ----- Основной вид green сообщений ----- */
+.green-msg,
+.green-msg-success,
+.green-msg-connect,
+.green-msg-access,
+.green-msg-no-access {
+	font-weight: 800;
+	font-size: 30px;
+	color: #33ff33;
+	position: absolute;
+	left: 5.5em;
+	top: 6em;
+	text-shadow:
+		-1px -1px 0 #000,
+		 1px -1px 0 #000,
+		-1px  1px 0 #000,
+		 1px  1px 0 #000; 
+}
+	.green-msg-success {
+		left: 5.5em;
+		top: 6em;
+	}
+		.green-msg-connect {
+			font-size: 20px;
+			left: 9em;
+			top: 7em;
+		}
+			.green-msg-access {
+				font-size: 16px;
+				left: 12em;
+				top: 11em;
+			}
+				.green-msg-no-access {
+					font-size: 16px;
+					left: 10.5em;
+					top: 11em;
+				}
+			
+	
+	
+/* ----- Настройки приложения ----- */
+
+
+
+
+
+
+
+
+
+/* -----  ----- */
+/* -----  ----- */
+/* -----  ----- */
+/* -----  ----- */
+/* -----  ----- */
+/* -----  ----- */
