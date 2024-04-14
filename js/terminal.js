@@ -101,7 +101,7 @@ closeTerm.addEventListener('mousedown', e => {
   openTermForm(0);
 });
 
-// при нажатии на синий ярлычок //
+// при нажатии мыши на синий ярлычок //
 handle.addEventListener('mousedown', e => {
   e.preventDefault();	// останавливаем стандартный обработчик
   // получаем начальные координаты

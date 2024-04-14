@@ -33,10 +33,10 @@ function choiseInput(inputName, form) {
 			}
 }
 
-
+// обработчик подключения к устройству по кнопке //
 async function connection(form) {
 	openTermForm(1);
-	await connect();
+	await connect();		// вызов функции подключения
 	if (connectionFlag) {
 		openForm(form);
 		let targetForm = document.getElementById(form);
@@ -51,7 +51,7 @@ async function connection(form) {
 		  }
 		openTermForm(0);
 	} else {
-		alert ('Соединение не удалось!');
+		alert ('Соединение потеряно!');
 		openTermForm(0);
 	}
 }
@@ -61,7 +61,7 @@ async function connection(form) {
 //  connect();
 //});
 
-// Проверка чекбоксов включения сценариев //
+// Обработчик выбранных чекбоксов включения сценариев //
 function checkedCheckbox() {
 	const chbArray = {};
 	let dataOut = '@';
@@ -104,11 +104,11 @@ function checkedCheckbox() {
 				break;
 		}
 	});
-		console.log(dataOut);
+		console.log(dataOut);		// удалить!!
 		send (dataOut);
 		dataOut = '';
 		
-	for (key in chbArray) {
+	for (key in chbArray) {			// удалить !!
 		console.log(`${key} = ${chbArray[key]}`);
 	}
 }
@@ -147,13 +147,13 @@ function connect() {
 
 // Запрос выбора Bluetooth устройства
 function requestBluetoothDevice() {
-  log('Requesting bluetooth device...');
+  log('Запрос устройства Bluetooth...');
 
   return navigator.bluetooth.requestDevice({
     filters: [{services: [0xFFE0]}],
   }).
       then(device => {
-        log('"' + device.name + '" bluetooth device selected');
+        log('"' + device.name + '" устройство Bluetooth выбрано');
         deviceCache = device;
         deviceCache.addEventListener('gattserverdisconnected',
             handleDisconnection);
@@ -167,7 +167,7 @@ function handleDisconnection(event) {
   let device = event.target;
 
   log('"' + device.name +
-      '" bluetooth device disconnected, trying to reconnect...');
+      '" Bluetooth-устройство отключено, переподключение...');
 
   connectDeviceAndCacheCharacteristic(device).
       then(characteristic => startNotifications(characteristic)).
@@ -180,21 +180,21 @@ function connectDeviceAndCacheCharacteristic(device) {
     return Promise.resolve(characteristicCache);
   }
 
-  log('Connecting to GATT server...');
+  log('Подключение к GATT серверу ...');
 
   return device.gatt.connect().
       then(server => {
-        log('GATT server connected, getting service...');
+        log('GATT сервер подключен, получение сервиса...');
 
         return server.getPrimaryService(0xFFE0);
       }).
       then(service => {
-        log('Service found, getting characteristic...');
+        log('Сервис найден, получение характеристики...');
 
         return service.getCharacteristic(0xFFE1);
       }).
       then(characteristic => {
-        log('Characteristic found');
+        log('Характеристика найдена');
         characteristicCache = characteristic;
 
         return characteristicCache;
@@ -203,11 +203,11 @@ function connectDeviceAndCacheCharacteristic(device) {
 
 // Включение получения уведомлений об изменении характеристики
 function startNotifications(characteristic) {
-  log('Starting notifications...');
+  log('Запуск уведомлений...');
 
   return characteristic.startNotifications().
       then(() => {
-        log('Notifications started');
+        log('Уведомления запущены');
 		connectionFlag = true;
         characteristic.addEventListener('characteristicvaluechanged',
             handleCharacteristicValueChanged);
@@ -217,7 +217,7 @@ function startNotifications(characteristic) {
 // Получение данных
 function handleCharacteristicValueChanged(event) {
   let value = new TextDecoder().decode(event.target.value);
-
+	// обработка пакетов размером более 20 Байт
   for (let c of value) {
     if (c === '\n') {
       let data = readBuffer.trim();
@@ -255,17 +255,17 @@ function disconnect(form) {
 	openTermForm(1);
 
   if (deviceCache) {
-    log('Disconnecting from "' + deviceCache.name + '" bluetooth device...');
+    log('Отключение от "' + deviceCache.name + '" Bluetooth-устройства...');
     deviceCache.removeEventListener('gattserverdisconnected',
         handleDisconnection);
 
     if (deviceCache.gatt.connected) {
       deviceCache.gatt.disconnect();
-      log('"' + deviceCache.name + '" bluetooth device disconnected');
+      log('"' + deviceCache.name + '" Bluetooth-устройство отключено');
     }
     else {
       log('"' + deviceCache.name +
-          '" bluetooth device is already disconnected');
+          '" Bluetooth-устройство уже отключено');
     }
   }
 

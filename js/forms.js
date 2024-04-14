@@ -7,6 +7,11 @@ let greenMsg = false;
 let redMsg = false;
 let passWord = "qwerty";
 
+// при загрузке выключить все сообщения о неверном пароле и коде //
+document.getElementById("wr_pass").style.display = "none"; 
+document.getElementById("wr_code").style.display = "none"; 
+document.getElementById("non_code").style.display = "none";  
+document.getElementById("none_pass").style.display = "none";
 
 /* пишем в поле значение ползунка яркости по умолчанию при загрузке */
 let range = document.querySelector('.range-input');
@@ -25,7 +30,6 @@ function getBrightValue() {
 	document.querySelector('.range-input').value = Math.round(bright);
 };
 
-/* Контроль движения ползунка яркости */
 let brightValue = function () {
 	document.getElementById("progress_value").innerHTML = this.value;
 	let sendVal = Math.round(this.value * 40.95);
@@ -33,21 +37,13 @@ let brightValue = function () {
 	send (dataSend);
 } 
 
-
+/* Контроль движения ползунка яркости */
 range.addEventListener('input', brightValue, false);
-range.addEventListener('mouseup', brightValue, false);
 
 /* Контроль отпускания ползунка яркости */
+range.addEventListener('mouseup', brightValue, false);
 
-
-
-
-// вначале выключить все сообщения о неверном пароле и коде //
-document.getElementById("wr_pass").style.display = "none"; 
-document.getElementById("wr_code").style.display = "none"; 
-document.getElementById("non_code").style.display = "none";  
-document.getElementById("none_pass").style.display = "none";
-
+//  //
 function MsgNone() {
 	if (authorization) {
 		document.getElementById("gr_Msg").style.display = "none";
@@ -58,6 +54,7 @@ function MsgNone() {
 	document.getElementById("wr_code").style.display = "block";
 }
 
+//  //
 function noneCodeInput() {
 	if (authorization) {
 		document.getElementById("gr_Msg").style.display = "none";
@@ -184,33 +181,127 @@ function windowClose() {
 window.close();
 }
 
-// Drag & Drop сценариев //
 
-document.querySelectorAll('.label').forEach(e => {
-  e.draggable = true;
-  e.ondragstart = e => {		
-    e.dataTransfer.setData("id", e.target.id); // задает тип данных и значение перетаскиваемых данных
-    e.target.classList.add('dragging'); // добавляет к классу элемента 'dragging'
-  }
-  e.ondragover = e => {			// когда над целью перетаскивания
-    let old = document.querySelector('.over');
-    old && old.classList.remove('over')
-    e.target.classList.add('over');
-    e.preventDefault();
-  };
-  e.ondrop = e => {			// при сбрасывании на цель
-    let old = document.querySelector('.dragging');
-    old && old.classList.remove('dragging')
-    old = document.querySelector('.over');
-    old && old.classList.remove('over');
-    let v = e.target.innerHTML;
-	let a = e.dataTransfer.getData('id');
-    let fromEl = document.querySelector('#'+ a);
-    e.target.innerHTML = fromEl.innerHTML;
-    fromEl.innerHTML = v;
-//	e.dataTransfer.clearData();
-  };
-})
+function touchHandler(event) {
+    var touch = event.changedTouches[0];
+
+    var simulatedEvent = document.createEvent("MouseEvent");
+        simulatedEvent.initMouseEvent({
+        touchstart: "mousedown",
+        touchmove: "mousemove",
+        touchend: "mouseup"
+    }[event.type], true, true, window, 1,
+        touch.screenX, touch.screenY,
+        touch.clientX, touch.clientY, false,
+        false, false, false, 0, null);
+
+    touch.target.dispatchEvent(simulatedEvent);
+ //   event.preventDefault();
+}
+
+function init(e) {
+    e.addEventListener("touchstart", touchHandler, true);
+    e.addEventListener("touchmove", touchHandler, true);
+    e.addEventListener("touchend", touchHandler, true);
+    e.addEventListener("touchcancel", touchHandler, true);
+}
+
+
+
+
+
+let draggingElement;
+let touchElement;
+let originalElement;
+let cloneElement;
+let offsetX;
+let offsetY;
+
+	// Drag & Drop сценариев //
+document.querySelectorAll('.label').forEach(e => {		// для каждого сценария
+    e.draggable = true;			// добавляем свойство позволяющее перетаскивание
+
+		// события для мыши:
+    e.ondragstart = e => {		// если перетаскивание начато
+        
+		e.dataTransfer.setData("text/plain", e.target.id);		// задаем тип и значение перетаскиваемых данных
+        e.target.classList.add('dragging');			// добавляем к классу 'dragging' (чтобы css отрабатывал)
+    }
+
+    e.ondragover = e => {		// когда над целью перетаскивания
+        
+		e.preventDefault();		// отменить стандартные вызовы, чтобы поле не двигалось
+        let old = document.querySelector('.over');		// ищем через класс элемент
+        old && old.classList.remove('over');		// удаляем через класс рамку элемента
+        e.target.classList.add('over');		// задаем текущему элементу рамку через класс (см.CSS)
+    }
+
+    e.ondrop = e => {			// при сбрасывании на цель
+        
+		let old = document.querySelector('.dragging');		// ищем через класс элемент
+        old && old.classList.remove('dragging');		// удаляем класс 'dragging' элемента
+        old = document.querySelector('.over');			// ищем через класс элемент
+        old && old.classList.remove('over');			// удаляем через класс рамку элемента 
+        let v = e.target.innerHTML;						// сохраняем текст 'label'
+        let a = e.dataTransfer.getData('text/plain');	// получаем по типу значение перетаскиваемых данных
+        let fromEl = document.querySelector('#'+ a);	// находим элемент по полученному значению
+        e.target.innerHTML = fromEl.innerHTML;			// подменяем цель на перетаскиваемый элемент
+        fromEl.innerHTML = v;							// подменяем перетаскиваемый элемент на цель
+    }
+	
+	// события для тача:
+   e.addEventListener('touchstart', function(event) {		// прикосновение тача
+        
+		touchElement = event.target.id;			//  сохраняем ID перетаскиваемого элемента
+		originalElement = event.target;				// сохраняем 'label' целиком
+		offsetX = event.changedTouches[0].clientX - originalElement.getBoundingClientRect().left;	// смещение элемента по X, относительно тача
+		offsetY = event.changedTouches[0].clientY - originalElement.getBoundingClientRect().top;	// смещение элемента по Y, относительно тача
+		cloneElement = originalElement.cloneNode(true);		// клонируем перетаскиваемый элемент
+		cloneElement.id = 'clone-' + touchElement;			// задаем ID клону
+		cloneElement.classList.add('clone');				// задаем клону класс .clone
+		document.body.appendChild(cloneElement);			// вставляем клон в тело документа
+		let rect = originalElement.getBoundingClientRect();	// получаем расположение перетаскиваемого элемента относительно окна
+		cloneElement.style.left = rect.left + 'px';		//	передаем эти кооржинаты X клону
+		cloneElement.style.top = rect.top + 'px';		//	передаем эти кооржинаты Y клону
+		event.target.classList.add('dragging');		//	добавляем перетаскиваемому элементу класс 'dragging'
+		event.target.classList.add('over');			//	добавляем перетаскиваемому элементу класс 'over'
+    })
+
+    e.addEventListener('touchmove', e => {		// перемещение тача
+		
+		e.preventDefault();						// отменить стандартные вызовы, чтобы поле не двигалось
+		cloneElement.style.left = e.changedTouches[0].clientX - offsetX + 'px';	// задаем клону смещение относительно тача по X
+		cloneElement.style.top = e.changedTouches[0].clientY - offsetY + 'px';	// задаем клону смещение относительно тача по Y	
+		const dropElement = document.elementFromPoint(event.changedTouches[0].clientX, event.changedTouches[0].clientY);	// фиксируем элемент под тачем
+		if (dropElement && dropElement.classList.contains('label')) {	//	если этот элемент 'label'
+			let old = document.querySelector('.over');	//	 ищем через класс элемент
+			old && old.classList.remove('over');		// удаляем через класс рамку элемента
+			dropElement.classList.add('over');			// задаем текущему элементу рамку через класс (см.CSS)
+		}
+	})
+	
+
+    e.addEventListener('touchend', e => {	// если тач отпустили
+        
+		cloneElement.remove();					// удаляем клона
+		const dropElement = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);	// фиксируем элемент под тачем
+		if (dropElement && dropElement.classList.contains('label')) {	//	если этот элемент 'label'
+			let old = document.querySelector('.dragging');		//	 ищем через класс элемент
+			old && old.classList.remove('dragging');			// удаляем класс 'dragging' элемента
+			old = document.querySelector('.over');				//	 ищем через класс элемент
+			old && old.classList.remove('over');				// удаляем через класс рамку элемента
+			
+
+			let v = dropElement.innerHTML;						// сохраняем текст 'label'
+			let a = touchElement;								// получаем ID перетаскиваемого элемента 
+			let fromEl = document.querySelector('#'+ a);		// находим элемент по полученному значению
+			dropElement.innerHTML = fromEl.innerHTML;			// подменяем цель на перетаскиваемый элемент
+			fromEl.innerHTML = v;								// подменяем перетаскиваемый элемент на цель
+		}
+		touchElement = null;									// обнуляем ID перетаскиваемого элемента
+    })	
+});
+
 
 // Обработка полей формы настроек лестницы при вводе значений//
 function serializeForm(formNode) {
@@ -223,8 +314,8 @@ function serializeForm(formNode) {
 	  return {name, value}
   })
   
-  let filtered = data.filter(function(el){
-	  return el.value != '';
+  let filtered = data.filter(function(el){		// фильтр списка
+	  return el.value != '';						// только заполненные поля 
   })
   
   let dataOut = '#';
@@ -303,8 +394,9 @@ async function getSettings() {
 		}
 }
 
+// загрузка настроек лестницы
 function downloadSettings() {
-	console.log(dataInput);
+	console.log(dataInput);		// удалить !!
 	dataExchange = false;
 	let tempData = dataInput.split(':');
 	tempData.forEach((val, index) => {
@@ -365,13 +457,15 @@ function downloadSettings() {
 	dataInput = '';
 }
 
+// обработчик отправки формы настроек лестницы
+const applicantForm = document.getElementById('10form-stair-settings')
+applicantForm.addEventListener('submit', handleFormSubmit)
+
+// ручная отправка формы настроек лестницы
 function handleFormSubmit(event) {
   event.preventDefault()
   serializeForm(applicantForm)
 }
-
-const applicantForm = document.getElementById('10form-stair-settings')
-applicantForm.addEventListener('submit', handleFormSubmit)
 
 // Проверка ввода значений в форме настроек лестницы //
 function checkValue(input) {

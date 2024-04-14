@@ -167,6 +167,7 @@ input {
 }
 
 .label,
+.label_set,
 .nolabel {
 	width: 155px;
 	cursor: pointer;
@@ -255,6 +256,12 @@ input {
 
 .dragging {
 	opasity: 0.5;
+}
+
+.clone {
+	opasity: 0.5;
+	position: absolute;
+	width: 350px;
 }
 
 .over {
