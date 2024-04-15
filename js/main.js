@@ -1,6 +1,6 @@
 // Получение ссылок на элементы UI
 //let connectButton = document.getElementById('btn_Connect');
-let disconnectButton = document.getElementById('disconnect');
+//let disconnectButton = document.getElementById('disconnect');
 let terminalContainer = document.getElementById('terminal');
 let sendForm = document.getElementById('terminal-form');
 let inputField = document.getElementById('inputTerminal');
@@ -115,9 +115,9 @@ function checkedCheckbox() {
 
 
 // Отключение от устройства при нажатии на кнопку Disconnect
-disconnectButton.addEventListener('click', function() {
-  disconnect();
-});
+// disconnectButton.addEventListener('click', function() {
+//  disconnect();
+// });
 
 // Обработка события отправки формы
 sendForm.addEventListener('submit', function(event) {
@@ -153,7 +153,7 @@ function requestBluetoothDevice() {
     filters: [{services: [0xFFE0]}],
   }).
       then(device => {
-        log('"' + device.name + '" устройство Bluetooth выбрано');
+        log('выбрано Bluetooth устройство "'+ device.name +'"');
         deviceCache = device;
         deviceCache.addEventListener('gattserverdisconnected',
             handleDisconnection);
@@ -166,8 +166,7 @@ function requestBluetoothDevice() {
 function handleDisconnection(event) {
   let device = event.target;
 
-  log('"' + device.name +
-      '" Bluetooth-устройство отключено, переподключение...');
+  log('Bluetooth-устройство "'+ device.name +'" отключено, переподключение...');
 
   connectDeviceAndCacheCharacteristic(device).
       then(characteristic => startNotifications(characteristic)).
@@ -194,7 +193,7 @@ function connectDeviceAndCacheCharacteristic(device) {
         return service.getCharacteristic(0xFFE1);
       }).
       then(characteristic => {
-        log('Характеристика найдена');
+        log('Характеристика получена');
         characteristicCache = characteristic;
 
         return characteristicCache;
@@ -255,17 +254,17 @@ function disconnect(form) {
 	openTermForm(1);
 
   if (deviceCache) {
-    log('Отключение от "' + deviceCache.name + '" Bluetooth-устройства...');
+    log('Отключение от Bluetooth-устройства "' + deviceCache.name + '" ...');
     deviceCache.removeEventListener('gattserverdisconnected',
         handleDisconnection);
 
     if (deviceCache.gatt.connected) {
       deviceCache.gatt.disconnect();
-      log('"' + deviceCache.name + '" Bluetooth-устройство отключено');
+      log('Bluetooth-устройство "' + deviceCache.name + '" отключено');
     }
     else {
-      log('"' + deviceCache.name +
-          '" Bluetooth-устройство уже отключено');
+      log('Bluetooth-устройство "' + deviceCache.name +
+          '" уже отключено');
     }
   }
 

@@ -17,20 +17,20 @@ hr {
 /* ----- Вид заголовков ----- */
 h5 {
 	font-weight: 800;
-	outline: 1px solid orange;
+/*	outline: 1px solid orange;	*/
 	margin-bottom: 15rem;
 	width: fit-content;
 }
 	h4 {
 		font-weight: 700;
 		color: #FF0080;
-		outline: 1px solid orange;
+/*		outline: 1px solid orange;	*/
 		margin-top: 1rem;
 	}
 		h3 {
 			font-weight: 800;
 			color: #FF0080;
-			outline: 1px solid orange;
+/*			outline: 1px solid orange;	*/
 			position: absolute;
 			z-index: 100;
 		}
@@ -53,6 +53,7 @@ h5 {
  .red-msg {
 	font-weight: 800;
 	font-size: 30px;
+	width: 400px;
 	color: #FF0080;
 	position: absolute;
 	opasity: 1;
@@ -63,8 +64,8 @@ h5 {
 }
 	/* ----- Дополнительный вид red сообщений ----- */
 	.red-msg {
-		left: 5em;
-		top: 6em;
+		left: -2em;
+		top: 5em;
 		transition: none;
 	}
 	
@@ -88,16 +89,22 @@ h5 {
 		transition: all 3.5s; */
 	}
 		.wp[id='none_pass']{
-			left: 6.5em;
+			width: 300px;
+			left: -0.5em;
 		}
+			.wp[id='wr_pass']{
+				width: 320px;
+				left: -0.8em;
+			}
 .wc {
 	font-weight: 800;
 	font-size: 30px;
+	width: 260px;
 	color: #FF0080;
 	position: absolute;
 	opasity: 0; 
 /*	visibility: visible; */
-	left: 7em;
+	left: 0.3em;
 	top: 6em;
 /*	transition: all 1.5s; */
 	animation: blinker 3s linear infinite;
@@ -135,22 +142,26 @@ h5 {
 		 1px  1px 0 #000; 
 }
 	.green-msg-success {
-		left: 5.5em;
-		top: 6em;
+		width: 340px;
+		left: -1.2em;
+		top: 4em;
 	}
 		.green-msg-connect {
 			font-size: 20px;
-			left: 9em;
+			width: 320px;
+			left: -1.3em;
 			top: 7em;
 		}
 			.green-msg-access {
 				font-size: 16px;
-				left: 12em;
+				width: 300px;
+				left: -1em;
 				top: 11em;
 			}
 				.green-msg-no-access {
 					font-size: 16px;
-					left: 10.5em;
+					width: 340px;
+					left: -2.2em;
 					top: 11em;
 				}
 			

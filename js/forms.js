@@ -17,7 +17,7 @@ document.getElementById("none_pass").style.display = "none";
 let range = document.querySelector('.range-input');
 document.getElementById("progress_value").innerHTML = range.value;
 
-/* получаем текущее значение ползунка от устройства по кнопке - !!! удалить !!!*/
+/* получаем текущее значение ползунка от устройства по кнопке - !!! Уже не используется - удалить !!!*/
 function progressValue() {
 	send('!'+'10'); 		// запрос к устройству (0x21, 10)
 	setTimeout(getBrightValue,300);
@@ -90,7 +90,7 @@ passForm.addEventListener('submit', function(event) {
 function OnOffStaircase(val) {
 	//openTermForm();
 	if (val) {
-		send('@A');		// (0x40, 0x41)
+		send('@O');		// (0x40, 0x4F)
 		document.getElementById("btn_On_Staircase").style.display = "none";
 		document.getElementById("btn_On_Staircase2").style.display = "none";
 		document.getElementById("btn_On_Staircase3").style.display = "none";
@@ -98,7 +98,7 @@ function OnOffStaircase(val) {
 		document.getElementById("btn_Off_Staircase2").style.display = "block";
 		document.getElementById("btn_Off_Staircase3").style.display = "block";
 	} else {
-		send('@a');		//(0x40, 0x61)
+		send('@o');		//(0x40, 0x6F)
 		document.getElementById("btn_Off_Staircase").style.display = "none";
 		document.getElementById("btn_Off_Staircase2").style.display = "none";
 		document.getElementById("btn_Off_Staircase3").style.display = "none";
@@ -280,7 +280,6 @@ document.querySelectorAll('.label').forEach(e => {		// для каждого с�
 		}
 	})
 	
-
     e.addEventListener('touchend', e => {	// если тач отпустили
         
 		cloneElement.remove();					// удаляем клона

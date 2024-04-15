@@ -9,7 +9,7 @@
 	justify-content: center;
 	align-items: center;
 	text-align: center;
-	border-radius: 10px;outline: 1px solid orange;
+/*	border-radius: 10px;outline: 1px solid orange;	*/
 }
 
 .tab-form[id="11form-scenario-set"] div.range_Bright {
@@ -24,10 +24,10 @@
 		 display: none;  /* ---------  скрыть все формы  */
 		/* background-color: rgba(255, 255, 255, 0.1);     - задний фон для всех форм */
 
-		padding: 20px 200px 40px;
+		padding: 20px 0px 40px;
 		font-weight: 600;
 		border: 2px;
-		border-radius: 10px;outline: 1px solid orange;  /*  временная рамка - удалить  */
+/*		border-radius: 10px;outline: 1px solid orange;    временная рамка - удалить  */
 		position: relative;
 	}
 

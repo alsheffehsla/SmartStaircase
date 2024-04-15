@@ -132,8 +132,8 @@ input {
 .chk_box_list,
 .param_set_list {
   
-	padding-left: 10px;
-	padding-right: 10px;
+/*	padding-left: 10px;
+	padding-right: 10px;	*/
 	 border: 2px solid cornflowerblue; 
 	 border-radius: 10px; 
 }
