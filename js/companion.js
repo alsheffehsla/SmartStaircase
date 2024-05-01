@@ -20,4 +20,4 @@
   if (workerScript && 'serviceWorker' in navigator) {
     navigator.serviceWorker.register(workerScript);
   }
-})();
+});

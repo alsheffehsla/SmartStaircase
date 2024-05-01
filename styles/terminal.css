@@ -8,8 +8,8 @@
 	border-radius: 10px;
 /*	outline: 1px solid orange;  /*  временная рамка - удалить  */
 	position: absolute;
-   --x: 0px;
-  --y: 0px;
+	--x: 0px;
+	--y: 0px;
     transform: translate(var(--x), var(--y));
 	}
 
