@@ -64,7 +64,7 @@ async function connection(form) {
 // Обработчик выбранных чекбоксов включения сценариев //
 function checkedCheckbox() {
 	const chbArray = {};
-	let dataOut = '@';
+	let dataOut = new String('@');
 	document.querySelectorAll('label:has(+ input:checked)').forEach((elem) => {
 		let checkedBoxes = elem.innerHTML;
 //		console.log(checkedBoxes);
@@ -100,10 +100,19 @@ function checkedCheckbox() {
 			case 'Выключить':
 				dataOut += 'a';      //(0x61)
 				break;
+			case 'Зациклить сценарий':
+				dataOut += 'C';      //(0x43)
+				break;
 			default:
+				
 				break;
 		}
 	});
+		
+		if (!dataOut.includes('C')) {		// если в строке нет 'C' (0x43) -(зацикливание не выбрано)
+			dataOut += 'c';          // (0x63)  -  добавим в строку отмену зацикливания
+		}
+		
 		console.log(dataOut);		// удалить!!
 		send (dataOut);
 		dataOut = '';
