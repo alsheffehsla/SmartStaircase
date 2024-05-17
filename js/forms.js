@@ -1,4 +1,5 @@
 
+let StandBy, DefaultSettings, Night, Cycle, Up, Down, AllStep, Different, Towards, SOS, Luminescent;
 
  let passForm = document.getElementById('2form-auth'); 
  let inputPass = document.getElementById('input_box');
@@ -17,12 +18,6 @@ document.getElementById("none_pass").style.display = "none";
 let range = document.querySelector('.range-input');
 document.getElementById("progress_value").innerHTML = range.value;
 
-/* получаем текущее значение ползунка от устройства по кнопке - !!! Уже не используется - удалить !!!*/
-function progressValue() {
-	send('!'+'10'); 		// запрос к устройству (0x21, 10)
-	setTimeout(getBrightValue,300);
-}
-
 /* устанавливаем текущее значение яркости устройства при загрузке формы*/
 function getBrightValue() {
 	let bright = dataInput / 40.95 ;
@@ -33,7 +28,7 @@ function getBrightValue() {
 let brightValue = function () {
 	document.getElementById("progress_value").innerHTML = this.value;
 	let sendVal = Math.round(this.value * 40.95);
-	let dataSend = '#'+'10'+':'+ sendVal + ';#';
+	let dataSend = '#'+'99'+':'+ sendVal + ';#';	// 99 - спец.команда для изменения яркости на лету
 	send (dataSend);
 } 
 
@@ -168,10 +163,28 @@ function openForm(needForm) {
 			redMsg = true;
 		}
 	}
+
+	if (needForm == '9form-menu-stair') {
+		send('@o');		// (0x40, 0x6F)  принудительно переводим контроллер в режим ожидания
+		OnOffStaircase(false);
+		if (passFlag) {
+			document.getElementById("btn_Back_Menu").style.display = "block";
+		} else document.getElementById("btn_Back_Menu").style.setProperty("visibility", 'Hidden');
+	}
 	
 	if (needForm == '11form-scenario-set') {
 		send('!'+'10'); 		// запрос значения яркости от устройства (0x21, 10)
 		setTimeout(getBrightValue,300);
+	}
+	
+	if (needForm == '13form-non-code-connect') {
+		send('?'+'100'); 		// запрос всех флагов 
+		setTimeout(() => { 
+			flagsParser();	
+			if (StandBy) {			// проверка флага standby (0x3F, 120)
+				OnOffStaircase(false);
+			} else {OnOffStaircase(true);}
+		}, 300);
 	}
 }
 
@@ -303,7 +316,7 @@ document.querySelectorAll('.label').forEach(e => {		// для каждого с�
 
 
 // Обработка полей формы настроек лестницы при вводе значений//
-function serializeForm(formNode) {
+async function serializeForm(formNode) {
   const {elements} = formNode
   
   const data = Array.from(elements)
@@ -317,17 +330,17 @@ function serializeForm(formNode) {
 	  return el.value != '';						// только заполненные поля 
   })
   
-  let dataOut = '#';
+	let dataOut = '#';
   filtered.forEach((val) => {
 	  switch (val.name) {
 		  case 'number_of_steps':
 			  dataOut += '8'+':'+ val.value + ';';
 			  break;
 		  case 'max_bright':
-			  dataOut += '10'+':'+ val.value + ';';
+			  dataOut += '10'+':'+ Math.round(val.value * 4095 / 100) + ';';
 			  break;
 		  case 'emergency_bright':
-			  dataOut += '9'+':'+ val.value + ';';
+			  dataOut += '9'+':'+ Math.round(val.value * 4095 / 100) + ';';
 			  break;
 		  case 'brightness_step':
 			  dataOut += '14'+':'+ val.value + ';';
@@ -372,30 +385,28 @@ function serializeForm(formNode) {
 			  dataOut += '7'+':'+ val.value + ';';
 			  break;
 	  }
-  })
+  })	
+  
 		dataOut += '#';
-			send (dataOut);
+		send(dataOut);
 		dataOut = '';
-		
-  console.log(filtered)  // впоследствии удалить!
+//  console.log(filtered)  // впоследствии удалить!
 }
 
-// Загрузка настроек лестницы по нажатию кнопки Загрузить настройки//
-async function getSettings() {
+
+// Загрузка настроек лестницы по нажатию кнопок Загрузить настройки, Заводские настройки//
+async function getSettings(val) {
 	dataInput = '';
 	dataExchange = false;
-	send ('?');
-	if(dataExchange) {
-		dataExchange = false;
-		downloadSettings();
-	} else {
-		setTimeout(downloadSettings, 300);
-		}
+	if (val) {									// если true
+		send ('&');									// запрос данных из рабочего массива		
+	} else send ('%');								// если false запрос данных из дефолтного массива
+	setTimeout(downloadSettings, 500);				// через таймаут получить данные
 }
 
 // загрузка настроек лестницы
 function downloadSettings() {
-	console.log(dataInput);		// удалить !!
+//	console.log(dataInput);		// удалить !!
 	dataExchange = false;
 	let tempData = dataInput.split(':');
 	tempData.forEach((val, index) => {
@@ -456,14 +467,71 @@ function downloadSettings() {
 	dataInput = '';
 }
 
-// обработчик отправки формы настроек лестницы
+
+// загрузка флагов 
+function flagsParser() {
+//	console.log(dataInput);		// удалить !!
+	dataExchange = false;
+	let flagsData = dataInput.split(':');
+	flagsData.forEach((val, index) => {
+		switch (index) {
+			case 0:
+				if (val == 1) {StandBy = true;}
+				else {StandBy = false;}
+				break;
+			case 1:
+				if (val == 1) {DefaultSettings = true;}
+				else {DefaultSettings = false;}			
+				break;
+			case 2:
+				if (val == 1) {Night = true;}
+				else {Night = false;}
+				break;
+			case 3:
+				if (val == 1) {Cycle = true;}
+				else {Cycle = false;}
+				break;
+			case 4:
+				if (val == 1) {Up = true;}
+				else {Up = false;}
+				break;;
+			case 5:
+				if (val == 1) {Down = true;}
+				else {Down = false;}
+				break;
+			case 6:
+				if (val == 1) {AllStep = true;}
+				else {AllStep = false;}
+				break;
+			case 7:
+				if (val == 1) {Different = true;}
+				else {Different = false;}
+				break;
+			case 8:
+				if (val == 1) {Towards = true;}
+				else {Towards = false;}
+				break;
+			case 9:
+				if (val == 1) {SOS = true;}
+				else {SOS = false;}
+				break;
+			case 10:
+				if (val == 1) {Luminescent = true;}
+				else {Luminescent = false;}
+				break;
+		}
+ })
+	dataInput = '';
+}
+
+// обработчик формы настроек лестницы
 const applicantForm = document.getElementById('10form-stair-settings')
 applicantForm.addEventListener('submit', handleFormSubmit)
 
-// ручная отправка формы настроек лестницы
+// ручная отправка настроек лестницы
 function handleFormSubmit(event) {
-  event.preventDefault()
-  serializeForm(applicantForm)
+  event.preventDefault();
+  serializeForm(applicantForm);
 }
 
 // Проверка ввода значений в форме настроек лестницы //

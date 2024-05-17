@@ -82,7 +82,7 @@
 					</div>
 					<button type="submit" id="btn_Connect" onclick="choiseInput('input_Code', '9form-menu-stair')">Подключить<br>устройство</button>
 					<button type="button" id="btn_No_Code_Connect" onclick="connection('13form-non-code-connect')">Ограниченное<br>подключение</button>
-					<button type="button" id="btn_Back_To_With_Auth" onclick="openForm('1form-general')">Назад</button>
+					<button type="button" id="btn_Back_To_With_Auth" onclick="openForm('6form-with-auth')">Назад</button>
 				</form>
 				
 				<!-- Форма настроек приложения -->
@@ -227,8 +227,8 @@
 					</div>
 					<div class="button_pool">
 						<button type="submit" id="btn_Save_Settings_App" class="midi-button" onclick="">Сохранить<br>настройки</button>
-						<button type="button" id="btn_Settings_Request" class="midi-button" onclick="getSettings()">Загрузить<br>настройки</button>
-						<button type="button" id="btn_Default_Settings" class="midi-button" onclick="">Заводские<br>настройки</button>
+						<button type="button" id="btn_Settings_Request" class="midi-button" onclick="getSettings(1)">Загрузить<br>настройки</button>
+						<button type="button" id="btn_Default_Settings" class="midi-button" onclick="getSettings(0)">Заводские<br>настройки</button>
 						<button type="button" id="btn_Back_Menu_Stair" class="midi-button" onclick="openForm('9form-menu-stair')">Назад</button>
 					</div>
 				</form>

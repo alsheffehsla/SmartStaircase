@@ -10,6 +10,7 @@ let isTerminalAutoScrolling = true;
 let dataInput = '';
 let dataExchange = false;
 let passFlag = false;
+let codeFlag = false;
 let authorization = false;
 let connectionFlag = false;
 let code = 2345;
@@ -19,7 +20,7 @@ function choiseInput(inputName, form) {
 	let choise = document.getElementById(inputName);
 	if (choise.value == code) {
 		choise.value = '';
-		passFlag = true;
+		codeFlag = true;
 		closeAllMsg();
 		closeAllForms();
 		openTermForm();
@@ -35,14 +36,14 @@ function choiseInput(inputName, form) {
 
 // обработчик подключения к устройству по кнопке //
 async function connection(form) {
-	openTermForm(1);
+//	openTermForm(1);
 	await connect();		// вызов функции подключения
 	if (connectionFlag) {
 		openForm(form);
 		let targetForm = document.getElementById(form);
 		targetForm.insertAdjacentHTML('afterbegin',
       '<span class="green-msg-connect">Соединение установлено !</span>');
-		  if (passFlag) {
+		  if (codeFlag) {
 			  targetForm.insertAdjacentHTML('afterbegin',
 		  '<span class="green-msg-access">Полный доступ к управлению</span>');
 		  } else {
@@ -298,18 +299,22 @@ function send(data) {
     return;
   }
 
- // data += '\n';
-
 
   if (data.length > 20) {
-    let chunks = data.match(/(.|[\r\n]){1,20}/g);
-
+    data += '|';
+	let chunks = data.match(/(.|[\r\n]){1,19}/g);
+//	chunks += '|';
+	chunks[0] += '^';
+  log(chunks[0], 'out');
+  
     writeToCharacteristic(characteristicCache, chunks[0]);
 
     for (let i = 1; i < chunks.length; i++) {
-      setTimeout(() => {
+      chunks[i] += '^';
+	  log(chunks[i], 'out');
+	  setTimeout(() => {
         writeToCharacteristic(characteristicCache, chunks[i]);
-      }, i * 100);
+      },i*200);
     }
   }
   else {
@@ -317,6 +322,7 @@ function send(data) {
   }
 
   log(data, 'out');
+
 }
 
 // Записать значение в характеристику

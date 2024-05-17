@@ -67,7 +67,7 @@ h5 {
 	/* ----- Дополнительный вид red сообщений ----- */
 	.red-msg {
 		left: -2em;
-		top: 5em;
+		top: 6em;
 		transition: none;
 	}
 	
