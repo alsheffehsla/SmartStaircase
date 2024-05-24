@@ -142,7 +142,7 @@
 					<button type="button" id="btn_Set_Stair" onclick="openForm('form-stair-settings')">Настройка<br>лестницы</button>
 					<button type="button" id="btn_Light_Effect" onclick="openForm('form-scenario-set')">Световые<br>эффекты</button>
 					<button type="button" id="btn_Back_Menu" onclick="openForm('form-with-auth')">Назад в меню</button>
-					<button type="button" id="btn_Inf_Help" onclick="alert(help)">Справка</button>
+					<button type="button" id="btn_Inf_Help" onclick="Reference()">Справка</button>
 					<button type="button" id="btn_Quit_3" onclick="window.open('', '_self', ''); window.close();">Выход</button>
 				</form>
 				
@@ -333,6 +333,109 @@
 						<div class="in">...так выглядят входящие сообщения...</div>
 					</div>
 				</form>
+
+			<!-- Форма справки -->				
+				<div class="modalBackground">
+					<div class="modalActive">
+						<div class="modalClose">
+							<img src="images/modalCross.svg" />
+						</div>
+						<div class="modalWindow">
+							<p style="text-align: center"><b style="font-size:2em">Справка</b></p>
+					<p style="text-align: center"><b>Описание протокола обмена.</b></p>
+					<p>	Разбор входящих данных на контроллере лестницы производится по первому пришедшему символу:</p>
+						<p><b style="font-size:1.2em">$</b> - команда СТОП. Параметров нет;<br>
+						<b style="font-size:1.2em">#</b> - команда настроек лестницы. Записывает полученные данные в Рабочий массив.</p>
+						<p>Общий формат такой:<br>
+						&emsp;#AA:XXXX;#  - где </p>
+						<p>&emsp;&emsp;# - начальный символ;<br>
+						&emsp;&emsp;AA – адрес в массиве, куда нужно записать данные;<br>
+						&emsp;&emsp;&ensp;адрес 99 является специальным – нужен для управления<br>
+						&emsp;&emsp;&ensp;ползунком яркости на лету;<br>
+						&emsp;&emsp;: - разделитель между адрес-параметр;<br>
+						&emsp;&emsp;XXXX – значение параметра;<br>
+						&emsp;&emsp;; - разделитель между блоками;<br>
+						&emsp;&emsp;# - конечный символ;<br>
+						<p>&emsp;Можно передавать несколько настроек разом:<br>
+						<b>&emsp;#AA:XXXX;AA:XXXX;……#</b>   - может иметь от  1 до 17 блоков<br>
+						&emsp;&emsp;в любом порядке;</p>
+
+						<p><b style="font-size:1.2em">!</b> – вернет требуемое значение из EEPROM. Формат данных;<br>
+							&emsp;!XX – где, XX – адрес в массиве, из которого хотим получить<br>
+						&emsp;&emsp;данные;</p>
+
+						<p><b style="font-size:1.2em">&</b> – вернет целиком Рабочий массив. Параметров нет;<br>
+						<b style="font-size:1.2em">%</b> – вернет целиком Дефолтный массив. Параметров нет;<br>
+						<b style="font-size:1.2em">|</b> – вернет целиком массив из EEPROM. Параметров нет;<br>
+						<b style="font-size:1.2em">?</b> – вернет запрашиваемый флаг режимов контроллера;<br>
+						Формат данных:</p>
+							<p>&emsp;?ХХX 	– где XХХ, запрашиваемый флаг;<br>
+							&emsp;&emsp;100		- allFlags – все флаги разом:<br>
+							&emsp;&emsp;110 	- standby - режим удаленного управления;<br>
+							&emsp;&emsp;120		- default - настройки по-умолчанию;<br>
+							&emsp;&emsp;130		- night - день / ночь;<br>
+							&emsp;&emsp;140		- cycle - цикл / не цикл;<br>
+							&emsp;&emsp;150		- up - движение вверх;<br>
+							&emsp;&emsp;160		- down - движение вниз;<br>
+							&emsp;&emsp;170		- all - включение / выключение всех ступеней;<br>
+							&emsp;&emsp;180		- different - движение в разные стороны;<br>
+							&emsp;&emsp;190		- towards - движение навстречу<br>
+							&emsp;&emsp;200		- SOS - режим SOS;<br>
+							&emsp;&emsp;210		- luminescent - имитация люминесцентной лампы;</p>
+						<p>Ответ контроллера (пример): </p>
+							<p>&emsp;400, dataX – где, 400 – «Команда выполнена»,<br> 
+							&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;dataХ – состояние флага:<br>
+								<p>&emsp;&emsp;если в конце 0 – флаг сброшен;<br>
+								&emsp;&emsp;если в конце 1 – флаг установлен;</p>
+						<p>например, 150 – флаг движения вверх сброшен,<br>
+						&emsp;&emsp;&emsp;&emsp;&emsp; 121 – установлены настройки по-умолчанию.</p>
+
+						<p><b style="font-size:1.5em">*</b> - удаляет ключ EEPROM, то есть – сбрасывает значения, которые контроллер загружает из EEPROM. При следующем включении контроллер подгрузит в EEPROM дефолтные значения и будет работать с ними. Параметров нет;</p>
+
+						<p><b style="font-size:1.2em">@</b> - команда управления сценариями.<br> 
+						&emsp;&emsp;Выполняет все указанные сценарии.<br>
+						Формат данных:</p>
+							<p>&emsp;@Command  	    - где, Command – команда-указатель<br>
+							&emsp;&emsp;на сценарий;</p>
+						<p>Может принимать следующие значения ASCII (HEX):<br>
+							&emsp;U (0x55) – включение ступенек снизу-вверх;<br>
+							&emsp;u (0x75) – выключение ступенек снизу-вверх;<br>
+							&emsp;D (0x44) – включение ступенек сверху-вниз;<br>
+							&emsp;d (0x64) – выключение ступенек сверху-вниз;<br>
+							&emsp;A (0x41) – включение всех ступенек разом;<br>
+							&emsp;a (0x61) – выключение всех ступенек разом;<br>
+							&emsp;F (0x46) – включение ступенек от середины к краям;<br>
+							&emsp;f (0x66) – выключение ступенек от середины к краям;<br>
+							&emsp;T (0x54) – включение ступенек от краев к середине;<br>
+							&emsp;t (0x74) – выключение ступенек от краев к середине;<br>
+							&emsp;S (0x53) – включение режима SOS;<br>
+							&emsp;L (0x4C) – включение режима люминесцентной лампы;<br>
+							&emsp;C (0x43) – команда зацикливания; <br>
+							&emsp;с (0x63) – отмена команды зацикливания;<br>
+							&emsp;O (0x4F) – включение работы лестницы<br> 
+							&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(выход из деж. режима);<br>
+							&emsp;o (0x6F) – выключение работы лестницы<br> 
+							&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;(перевод в деж.режим);<br>
+							&emsp;P (0x50) – резерв<br>
+							&emsp;X (0x58) – запрос состояния устройства;</p>
+						<p>Можно передавать несколько сценариев разом:<br>
+						@UtcAXf….,            - где UtcAXf…  сценарии.<br> 
+						&emsp;Количество сценариев не ограничено.
+						<p>Должен последовательно отработать все заданные сценарии или зациклить их выполнение до получения команды СТОП.</p>
+
+						<p>Ответы от контроллера.</p>
+						Формат данных:
+							<p>&emsp;100, data – где, 100 – «Неверная команда»,<br> 
+							&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; data - строка с неверной командой<br>
+							&emsp;200, data – где, 200 – «Неверные данные»,<br> 
+							&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; data - строка с неверными данными<br>
+							&emsp;300, data – где, 300 – «Команда выполняется», data - команда<br>
+							&emsp;400, data – где, 400 – «Команда выполнена», data - команда<br>
+							&emsp;500, data – где, 500 – состояние «OK», data – выполняемая команда/сценарий;</p>
+						</div>
+					</div>
+				</div>
+
 		</div>
 		
 		<script src="js/settings.js"></script>

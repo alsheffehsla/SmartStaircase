@@ -100,6 +100,9 @@ function GetStartSettings() {
 	} else {
 		checkpass = tempcheck;
 	}
+	if (checkpass == "false" || checkpass == false) {
+		passFlag = true;
+	}
 	
 	let tempcheckcode = localStorage.getItem('CHECKCODE');
 	if (tempcheckcode == null) {

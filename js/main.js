@@ -43,7 +43,7 @@ function choiseInput(inputName, form, backform) {
 
 // обработчик подключения к устройству по кнопке //
 async function connection(form, backform) {
-	openTermForm(1);
+//	openTermForm(1);
 	Sound('click');
 	await connect();		// вызов функции подключения
 
