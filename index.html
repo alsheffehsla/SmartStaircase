@@ -23,18 +23,18 @@
 			
 			<div class = "authorization">
 				<!-- Основная форма -->
-				<form id="1form-general" class="tab-form">
-					<h5>Управление подсветкой лестницы 1</h5>
-					<button type="button" id="btn_Auth" onclick="openForm('2form-auth')">Авторизоваться</button>
-					<button type="button" id="btn_Skip" onclick="openForm('7form-connect-with-auth')">Пропустить</button>
+				<form id="form-general" class="tab-form">
+					<h5>Управление подсветкой лестницы</h5>
+					<button type="button" id="btn_Auth" onclick="openForm('form-auth')">Авторизоваться</button>
+					<button type="button" id="btn_Skip" onclick="openForm('form-connect-with-auth'), backFormFlag = true">Пропустить</button>
 					<button type="button" id="btn_Quit" onclick="windowClose();">Выход</button>
-			<!-- 	<button type="button" onclick="openForm('10form-stair-settings'); ">Переход 10</button>
-				<button type="button" onclick="openForm('11form-scenario-set'); ">Переход 11</button>	-->  
+			<!-- 	<button type="button" onclick="openForm('form-stair-settings'); ">Переход 10</button>
+				<button type="button" onclick="openForm('form-scenario-set'); ">Переход 11</button>	-->  
 				</form>
 				
 				<!-- Форма авторизации -->
-				<form id="2form-auth" class="tab-form">
-					<h5>Управление подсветкой лестницы 2</h5>
+				<form id="form-auth" class="tab-form">
+					<h5>Управление подсветкой лестницы</h5>
 					<span class="wp" id="wr_pass">Неверный пароль!</span>
 					<span class="wp" id="none_pass">Введите пароль!</span>
 					<div class="box-input">
@@ -42,37 +42,37 @@
 						<label>Введите пароль</label>
 					</div>
 					<button type="submit" id="btn_GetIn" >Войти</button>
-					<button type="button" id="btn_Back_Gen" onclick="openForm('1form-general')">Назад</button>
+					<button type="button" id="btn_Back_Gen" onclick="openForm('form-general')">Назад</button>
 				</form>
 			</div>
 			
 			<div class = "non-auth-connect">
 				
 				<!-- Форма подключения без кода доступа -->
-				<form id="13form-non-code-connect" class="tab-form">
-					<h5>Управление подсветкой лестницы 13</h5>
+				<form id="form-non-code-connect" class="tab-form">
+					<h5>Управление подсветкой лестницы</h5>
 
 					<button type="button" id="btn_On_Staircase" onclick="OnOffStaircase(1)">Включить<br>лестницу</button>
 					<button type="button" id="btn_Off_Staircase" onclick="OnOffStaircase(0)">Выключить<br>лестницу</button>
-					<button type="button" id="btn_Skip" onclick="disconnect('7form-connect-with-auth')">Разорвать<br>соединение</button>
+					<button type="button" id="btn_Skip" onclick="disconnect('form-connect-with-auth')">Разорвать<br>соединение</button>
 					<button type="button" id="btn_Quit" onclick="window.open('', '_self', ''); window.close();">Выход</button>
 				</form>
 			</div>
 			
 			<div class = "auth-connect">
 				<!-- Форма соединения с авторизацией -->
-				<form id="6form-with-auth" class="tab-form">
-					<h5>Управление подсветкой лестницы 6</h5>
+				<form id="form-with-auth" class="tab-form">
+					<h5>Управление подсветкой лестницы</h5>
 
-					<button type="button" id="btn_W_A_Jump" onclick="openForm('7form-connect-with-auth')">Подключение</button>
-					<button type="button" id="btn_Set_App" onclick="openForm('8form-app-settings')">Настройки<br>приложения</button>
+					<button type="button" id="btn_W_A_Jump" onclick="openForm('form-connect-with-auth')">Подключение</button>
+					<button type="button" id="btn_Set_App" onclick="openForm('form-app-settings')">Настройки<br>приложения</button>
 					<button type="button" id="btn_Help" onclick="">Помощь</button>
 					<button type="button" id="btn_Quit_2" onclick="window.open('', '_self', ''); window.close();">Выход</button>
 				</form>
 				
 				<!-- Форма ввода пароля с авторизацией -->
-				<form id="7form-connect-with-auth" class="tab-form">
-					<h5>Управление подсветкой лестницы 7</h5>
+				<form id="form-connect-with-auth" class="tab-form">
+					<h5>Управление подсветкой лестницы</h5>
 
 					<span class="wc" id="wr_code">Неверный код!</span>
 					<span class="wc" id="non_code">Введите код!</span>
@@ -80,61 +80,75 @@
 						<input id="input_Code" class="input" type="password" required minlength="1" maxlength="4">
 						<label id="lbl">Код доступа к устройству<br>- четырехзначное число -</label>
 					</div>
-					<button type="submit" id="btn_Connect" onclick="choiseInput('input_Code', '9form-menu-stair')">Подключить<br>устройство</button>
-					<button type="button" id="btn_No_Code_Connect" onclick="connection('13form-non-code-connect')">Ограниченное<br>подключение</button>
-					<button type="button" id="btn_Back_To_With_Auth" onclick="openForm('6form-with-auth')">Назад</button>
+					<button type="submit" id="btn_Connect" onclick="choiseInput('input_Code', 'form-menu-stair', 'form-connect-with-auth')">Подключить<br>устройство</button>
+					<button type="button" id="btn_No_Code_Connect" onclick="connection('form-non-code-connect', 'form-connect-with-auth')">Ограниченное<br>подключение</button>
+					<button type="button" id="btn_Back_To_With_Auth" onclick= "BackForm()">Назад</button>
 				</form>
 				
 				<!-- Форма настроек приложения -->
-				<form id="8form-app-settings" class="tab-form">	
-					<h5>Настройки приложения 8</h5>
+				<form id="form-app-settings" class="tab-form">	
+					<h5>Настройки приложения</h5>
 					<div>
 						<ul class="chk_box_list">
 							<li class="chk_box">
-								<label for="fone_Change" class="label_set">Цвет фона</label>
-								<button class="mini-button" type="button" id="fone_Change">Изменить</button>
+								<label for="fonelist">Цвет фона</label>
+								<select name="FoneList" id="fonelist">
+									<option value="blue" selected="selected">Blue</option>
+									<option value="red">Red</option>
+									<option value="yellow">Yellow</option>
+									<option value="green">Green</option>
+								</select>
 							</li>
 							<li class="chk_box">
 								<label for="sound" class="label_set">Звук</label>
-								<input type="checkbox" id="sound" class="appchk">
+								<input type="checkbox" name="Sound" id="sound" class="appchk">
 								<label for="sound" class="chbx"></label>
 							</li>
 							<li class="chk_box">
-								<label for="pass_Change" class="label_set">Пароль</label>
-								<button class="mini-button" type="button" id="pass_Change">Изменить</button>
+								<label>Новый пароль</label>
+								<input id="new-pass" name="new_pass" class="set-input" type="text" minlength="1" maxlength="10" placeholder="Новый пароль" autocomplete="off">
 							</li>
 							<li class="chk_box">
-								<label for="ask_pass" class="label_set">Спрашивать пароль при входе каждый раз</label>
-								<input type="checkbox" id="ask_pass" class="appchk">
+								<label for="code_Change" class="label_set">Код подключения</label>
+								<input id="new-code" name="new_code" class="set-input" type="password" minlength="1" maxlength="4" placeholder="Новый код" autocomplete="off">
+							</li>
+							<li class="chk_box">
+								<label for="ask_pass" class="label_set">Всегда спрашивать пароль</label>
+								<input type="checkbox" name="AskPassAlways" id="ask_pass" class="appchk">
 								<label for="ask_pass" class="chbx"></label>
 							</li>
 							<li class="chk_box">
+								<label for="ask_code" class="label_set">Всегда спрашивать код</label>
+								<input type="checkbox" name="AskCodeAlways" id="ask_code" class="appchk">
+								<label for="ask_code" class="chbx"></label>
+							</li>
+							<li class="chk_box">
 								<label for="write_log" class="label_set">Вести лог событий</label>
-								<input type="checkbox" id="write_log" class="appchk">
+								<input type="checkbox" name="SaveLog" id="write_log" class="appchk">
 								<label for="write_log" class="chbx"></label>
 							</li>
 						</ul>
 					</div>
-					<button type="button" id="btn_Save_Settings" onclick="">Сохранить<br>настройки</button>
-					<button type="button" id="btn_Back_With_Auth" onclick="openForm('6form-with-auth')">Назад</button>
+					<button type="submit" id="btn_Save_Settings_App" onclick="">Сохранить<br>настройки</button>
+					<button type="button" id="btn_Back_With_Auth" onclick="openForm('form-with-auth')">Назад</button>
 				</form>
 				
 				<!-- Форма меню лестницы -->
-				<form id="9form-menu-stair" class="tab-form">
-					<h5>Управление подсветкой лестницы 9</h5>
+				<form id="form-menu-stair" class="tab-form">
+					<h5>Управление подсветкой лестницы</h5>
 					
 					<button type="button" id="btn_On_Staircase2" onclick="OnOffStaircase(1)">Включить<br>лестницу</button>
 					<button type="button" id="btn_Off_Staircase2" onclick="OnOffStaircase(0)">Выключить<br>лестницу</button>
-					<button type="button" id="btn_Set_Stair" onclick="openForm('10form-stair-settings')">Настройка<br>лестницы</button>
-					<button type="button" id="btn_Light_Effect" onclick="openForm('11form-scenario-set')">Световые<br>эффекты</button>
-					<button type="button" id="btn_Back_Menu" onclick="openForm('6form-with-auth')">Назад в меню</button>
-					<button type="button" id="btn_Inf_Help" >Справка</button>
+					<button type="button" id="btn_Set_Stair" onclick="openForm('form-stair-settings')">Настройка<br>лестницы</button>
+					<button type="button" id="btn_Light_Effect" onclick="openForm('form-scenario-set')">Световые<br>эффекты</button>
+					<button type="button" id="btn_Back_Menu" onclick="openForm('form-with-auth')">Назад в меню</button>
+					<button type="button" id="btn_Inf_Help" onclick="alert(help)">Справка</button>
 					<button type="button" id="btn_Quit_3" onclick="window.open('', '_self', ''); window.close();">Выход</button>
 				</form>
 				
 				<!-- Форма настроек лестницы -->
-				<form id="10form-stair-settings" class="tab-form">	
-					<h5>Настройки параметров<br>автоматической подсветки 10</h5>
+				<form id="form-stair-settings" class="tab-form">	
+					<h5>Настройки параметров<br>автоматической подсветки</h5>
 					<div>
 						<ul class="param_set_list">
 							<li class="set_box">
@@ -226,16 +240,16 @@
 						</ul>
 					</div>
 					<div class="button_pool">
-						<button type="submit" id="btn_Save_Settings_App" class="midi-button" onclick="">Сохранить<br>настройки</button>
+						<button type="submit" id="btn_Save_Settings_Controller" class="midi-button" onclick="">Сохранить<br>настройки</button>
 						<button type="button" id="btn_Settings_Request" class="midi-button" onclick="getSettings(1)">Загрузить<br>настройки</button>
 						<button type="button" id="btn_Default_Settings" class="midi-button" onclick="getSettings(0)">Заводские<br>настройки</button>
-						<button type="button" id="btn_Back_Menu_Stair" class="midi-button" onclick="openForm('9form-menu-stair')">Назад</button>
+						<button type="button" id="btn_Back_Menu_Stair" class="midi-button" onclick="openForm('form-menu-stair')">Назад</button>
 					</div>
 				</form>
 				
 				<!-- Форма настроек сценариев -->
-				<form id="11form-scenario-set" class="tab-form">	
-					<h5>Сценарии работы подсветки 11</h5>
+				<form id="form-scenario-set" class="tab-form">	
+					<h5>Сценарии работы подсветки</h5>
 					<a href=# onclick='openTermForm(1)'>открыть терминал</a>
 					<div id="scenario-list">
 						<ul class="scenario_list">
@@ -300,19 +314,8 @@
 					<input id="range-Bright" class="range-input" type="range" min="0" max="100" value="90">
 					
 					<button type="button" id="btn_Save_Settings" onclick="checkedCheckbox()">Применить</button>
-					<button type="button" id="stop" onclick="send('$')">СТОП</button>			
-					<button type="button" id="btn_Back_Stair_Settings" onclick="openForm('9form-menu-stair')">Назад</button>
-				</form>
-				
-				<!-- Форма подключения с кодом доступа -->
-				<!-- Форма является копией 13form-non-code-connect  - подумать как объединить-->
-				<form id="14form-with-code-connect" class="tab-form">
-					<h5>Управление подсветкой лестницы 14</h5>
-					<button type="button" id="btn_On_Staircase3" onclick="OnOffStaircase(1)">Включить<br>лестницу</button>
-					<button type="button" id="btn_Off_Staircase3" onclick="OnOffStaircase(0)">Выключить<br>лестницу</button>
-					<button type="button" id="btn_Skip" onclick="openForm('7form-connect-with-auth')">Назад</button>
-					<button type="button" id="btn_Quit" onclick="window.open('', '_self', ''); window.close();">Выход</button>
-					
+					<button type="button" id="stop" onclick="Sound('click'), send('$')">СТОП</button>			
+					<button type="button" id="btn_Back_Stair_Settings" onclick="openForm('form-menu-stair')">Назад</button>
 				</form>
 			</div>
 			
@@ -332,23 +335,14 @@
 				</form>
 		</div>
 		
-		
-		
-		<!--	<button id="connect" type="button">Connect</button>  -->
-
-		<!--	<button id="disconnect" type="button">Disconnect</button>  -->
-
-		
-
-
+		<script src="js/settings.js"></script>
 		<script src="js/main.js"></script>
 		<script src="js/forms.js"></script>
 		<script src="js/terminal.js"></script>
-	<!--	<script src="companion.js" data-service-worker="sw.js"></script>  -->
-	<!--	<script src="js/sw.js"></script>  -->
-	
+
+		<script type="text/javascript">GetStartSettings()</script>
 		<script type="text/javascript">
-			document.getElementById("1form-general").style.display = "block";
+			document.getElementById("form-general").style.display = "block";
 		</script>
 		<script src="js/companion.js" data-service-worker="sw.js"></script>
 	</body>

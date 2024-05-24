@@ -1,12 +1,13 @@
 
 let StandBy, DefaultSettings, Night, Cycle, Up, Down, AllStep, Different, Towards, SOS, Luminescent;
+let backFormFlag = false;
 
- let passForm = document.getElementById('2form-auth'); 
+ let passForm = document.getElementById('form-auth'); 
  let inputPass = document.getElementById('input_box');
 // let bckToGen = document.getElementById('btn_Back_Gen');
 let greenMsg = false;
 let redMsg = false;
-let passWord = "qwerty";
+
 
 // при загрузке выключить все сообщения о неверном пароле и коде //
 document.getElementById("wr_pass").style.display = "none"; 
@@ -40,7 +41,7 @@ range.addEventListener('mouseup', brightValue, false);
 
 //  //
 function MsgNone() {
-	if (authorization) {
+	if (authorization == true) {
 		document.getElementById("gr_Msg").style.display = "none";
 	} else {	
 		document.getElementById("red_Msg").style.display = "none";
@@ -51,7 +52,7 @@ function MsgNone() {
 
 //  //
 function noneCodeInput() {
-	if (authorization) {
+	if (authorization == true) {
 		document.getElementById("gr_Msg").style.display = "none";
 	} else {
 		document.getElementById("red_Msg").style.display = "none";
@@ -62,12 +63,15 @@ function noneCodeInput() {
 
 // Обработка события ввода пароля //
 passForm.addEventListener('submit', function(event) {
+	Sound('click');
 	event.preventDefault(); // Предотвратить отправку формы
-	if (inputPass.value == passWord) {
+	if (checkpass == "false") {
+		openForm('form-with-auth');
+	} else if (inputPass.value == passWord) {
 		passFlag = true;
 		inputPass.value = '';  	// Обнулить текстовое поле
 		document.getElementById("wr_pass").style.display = "none";
-		openForm('6form-with-auth');
+		openForm('form-with-auth');
 
 	} else if (inputPass.value == '') {
 		document.getElementById("wr_pass").style.display = "none";
@@ -84,22 +88,19 @@ passForm.addEventListener('submit', function(event) {
 // подключение без кода доступа //
 function OnOffStaircase(val) {
 	//openTermForm();
+	Sound('click');
 	if (val) {
 		send('@O');		// (0x40, 0x4F)
 		document.getElementById("btn_On_Staircase").style.display = "none";
 		document.getElementById("btn_On_Staircase2").style.display = "none";
-		document.getElementById("btn_On_Staircase3").style.display = "none";
 		document.getElementById("btn_Off_Staircase").style.display = "block";
 		document.getElementById("btn_Off_Staircase2").style.display = "block";
-		document.getElementById("btn_Off_Staircase3").style.display = "block";
 	} else {
 		send('@o');		//(0x40, 0x6F)
 		document.getElementById("btn_Off_Staircase").style.display = "none";
 		document.getElementById("btn_Off_Staircase2").style.display = "none";
-		document.getElementById("btn_Off_Staircase3").style.display = "none";
 		document.getElementById("btn_On_Staircase").style.display = "block";
 		document.getElementById("btn_On_Staircase2").style.display = "block";
-		document.getElementById("btn_On_Staircase3").style.display = "block";
 	}
 }
 
@@ -126,21 +127,48 @@ function clearAllInputs() {
 	inputPass.value = '';  // Обнулить текстовое поле
 }
 
+// Определение обратного пути кнопки назад в форме "form-connect-with-auth"
+function BackForm () {
+	if (backFormFlag) {
+		openForm('form-general');
+	} else {
+		openForm('form-with-auth');
+	}
+}
+
 // Открыть нужную форму //
 function openForm(needForm) {
+	Sound('click');
 	closeAllForms();
 	closeAllMsg();
 	clearAllInputs();
 	let targetForm = document.getElementById(needForm);
 	targetForm.style.display = "block";
 	
-	if (needForm == '6form-with-auth') {
-		document.getElementById('6form-with-auth').insertAdjacentHTML('afterbegin', 
+	if (needForm == 'form-general') {
+		backFormFlag = false;	
+	}
+	
+	if (needForm == 'form-auth') {
+		if (checkpass == "false") {
+			redMsg = false;
+			greenMsg = true;
+			passFlag = true;
+		}	
+	}
+	
+	if (needForm == 'form-with-auth') {
+		document.getElementById('form-with-auth').insertAdjacentHTML('afterbegin', 
 			'<span class="green-msg-success">Добро пожаловать!</span>');
 			
 	}
 	
-	if (needForm == '7form-connect-with-auth') {
+	if (needForm == 'form-connect-with-auth') {
+		if (checkcode == false || checkcode == "false") {
+			redMsg = false;
+			greenMsg = true;
+			codeFlag = true;
+		}
 		if (passFlag) {
 			if (greenMsg){
 				let elem = document.querySelector('#gr_Msg');
@@ -164,7 +192,26 @@ function openForm(needForm) {
 		}
 	}
 
-	if (needForm == '9form-menu-stair') {
+	if (needForm == 'form-app-settings') {
+		let fonerequest = localStorage.getItem('FONE');
+		let fonecolor;
+		if (fonerequest == "url('images/blue.jpg')") {
+			fonecolor = 'blue';
+		} else if (fonerequest == "url('images/red.jpg')") {
+			fonecolor = 'red';
+		} else if (fonerequest == "url('images/yellow.jpg')") {
+			fonecolor = 'yellow';
+		} else if (fonerequest == "url('images/green.jpg')") {
+			fonecolor = 'green';
+		}
+		document.getElementById('fonelist').value = fonecolor;
+		if (sound == "true") document.getElementById('sound').checked = true;
+		if (checkpass == true || checkpass == "true") document.getElementById('ask_pass').checked = true;
+		if (checkcode == true || checkcode == "true") document.getElementById('ask_code').checked = true;
+		if (savelog == "true") document.getElementById('write_log').checked = true;	
+	}
+
+	if (needForm == 'form-menu-stair') {
 		send('@o');		// (0x40, 0x6F)  принудительно переводим контроллер в режим ожидания
 		OnOffStaircase(false);
 		if (passFlag) {
@@ -172,12 +219,12 @@ function openForm(needForm) {
 		} else document.getElementById("btn_Back_Menu").style.setProperty("visibility", 'Hidden');
 	}
 	
-	if (needForm == '11form-scenario-set') {
+	if (needForm == 'form-scenario-set') {
 		send('!'+'10'); 		// запрос значения яркости от устройства (0x21, 10)
 		setTimeout(getBrightValue,300);
 	}
 	
-	if (needForm == '13form-non-code-connect') {
+	if (needForm == 'form-non-code-connect') {
 		send('?'+'100'); 		// запрос всех флагов 
 		setTimeout(() => { 
 			flagsParser();	
@@ -191,7 +238,8 @@ function openForm(needForm) {
 // Закрыть приложение //
 function windowClose() {
 //window.location.href="about:blank";
-window.close();
+	Sound('click');
+	window.close();
 }
 
 
@@ -315,7 +363,7 @@ document.querySelectorAll('.label').forEach(e => {		// для каждого с�
 });
 
 
-// Обработка полей формы настроек лестницы при вводе значений//
+// Обработка полей формы настроек лестницы//
 async function serializeForm(formNode) {
   const {elements} = formNode
   
@@ -396,6 +444,7 @@ async function serializeForm(formNode) {
 
 // Загрузка настроек лестницы по нажатию кнопок Загрузить настройки, Заводские настройки//
 async function getSettings(val) {
+	Sound('click');
 	dataInput = '';
 	dataExchange = false;
 	if (val) {									// если true
@@ -525,11 +574,12 @@ function flagsParser() {
 }
 
 // обработчик формы настроек лестницы
-const applicantForm = document.getElementById('10form-stair-settings')
+const applicantForm = document.getElementById('form-stair-settings')
 applicantForm.addEventListener('submit', handleFormSubmit)
 
 // ручная отправка настроек лестницы
 function handleFormSubmit(event) {
+  Sound('click');
   event.preventDefault();
   serializeForm(applicantForm);
 }

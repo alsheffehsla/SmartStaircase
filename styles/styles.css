@@ -3,7 +3,7 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: Roboto, sans-serif;
-	background-image: url('../images/fon.jpg');
+/*	background-image: url('../images/blue.jpg'); */
 	-webkit-background-size: cover;
 	background-size: cover;
 	overscroll-behavior: none;
@@ -37,17 +37,17 @@ h5 {
 			z-index: 100;
 		}
 		
-			.tab-form[id="8form-app-settings"] h5 {
+			.tab-form[id="form-app-settings"] h5 {
 				margin-bottom: 8rem;
 			}
 				/* если совпадает с начальным - удалить!!! */
-				.tab-form[id="9form-menu-stair"] h5 {
+				.tab-form[id="form-menu-stair"] h5 {
 					margin-bottom: 15rem;
 				}
-					.tab-form[id="10form-stair-settings"] h5 {
+					.tab-form[id="form-stair-settings"] h5 {
 						margin-bottom: 3rem;
 					}
-						.tab-form[id="11form-scenario-set"] h5 {
+						.tab-form[id="form-scenario-set"] h5 {
 							margin-bottom: 3rem;
 						}
 

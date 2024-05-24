@@ -23,11 +23,11 @@ button {
 	border: 2px solid #6C8EBF;
 	border-radius: 10px;
 }
-	.tab-form[id="9form-menu-stair"] button {
+	.tab-form[id="form-menu-stair"] button {
 		margin-top: 7px;
 	}
-		.tab-form[id="10form-stair-settings"] button,
-		.tab-form[id="11form-scenario-set"] button {
+		.tab-form[id="form-stair-settings"] button,
+		.tab-form[id="form-scenario-set"] button {
 				margin-top: 10px;
 			}
 
@@ -170,4 +170,3 @@ button[id="btn_Skip"] {
 	background: gray;
 }
 
-/* -----  ----- */

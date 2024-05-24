@@ -13,18 +13,25 @@ let passFlag = false;
 let codeFlag = false;
 let authorization = false;
 let connectionFlag = false;
-let code = 2345;
+
 
 // Проверка кода подключения к устройству //
-function choiseInput(inputName, form) {
+function choiseInput(inputName, form, backform) {
+	Sound('click');
 	let choise = document.getElementById(inputName);
-	if (choise.value == code) {
+	
+	if (checkcode == false || checkcode == "false") {
+		codeFlag = true;
+		closeAllMsg();
+		closeAllForms();		
+		connection(form, backform);
+	} else if (choise.value != "" && choise.value == code) {
 		choise.value = '';
 		codeFlag = true;
 		closeAllMsg();
 		closeAllForms();
-		openTermForm();
-		connection(form);
+	//	openTermForm();
+		connection(form, backform);
 		
 	} else if (choise.value == '') {
 		noneCodeInput();
@@ -35,9 +42,11 @@ function choiseInput(inputName, form) {
 }
 
 // обработчик подключения к устройству по кнопке //
-async function connection(form) {
-//	openTermForm(1);
+async function connection(form, backform) {
+	openTermForm(1);
+	Sound('click');
 	await connect();		// вызов функции подключения
+
 	if (connectionFlag) {
 		openForm(form);
 		let targetForm = document.getElementById(form);
@@ -53,17 +62,14 @@ async function connection(form) {
 		openTermForm(0);
 	} else {
 		alert ('Соединение потеряно!');
+		openForm(backform);
 		openTermForm(0);
 	}
 }
 
-// Подключение к устройству при нажатии на кнопку Connect
-//connectButton.addEventListener('click', function() {
-//  connect();
-//});
-
 // Обработчик выбранных чекбоксов включения сценариев //
 function checkedCheckbox() {
+	Sound('click');
 	const chbArray = {};
 	let dataOut = new String('@');
 	document.querySelectorAll('label:has(+ input:checked)').forEach((elem) => {
@@ -123,12 +129,6 @@ function checkedCheckbox() {
 	}
 }
 
-
-// Отключение от устройства при нажатии на кнопку Disconnect
-// disconnectButton.addEventListener('click', function() {
-//  disconnect();
-// });
-
 // Обработка события отправки формы
 sendForm.addEventListener('submit', function(event) {
   event.preventDefault(); // Предотвратить отправку формы
@@ -146,7 +146,7 @@ let characteristicCache = null;
 // Промежуточный буфер для входящих данных
 let readBuffer = '';
 
-// Запустить выбор Bluetooth устройства и подключиться к выбранному
+// Запуск выбора Bluetooth устройства и подключение к выбранному
 function connect() {
   return (deviceCache ? Promise.resolve(deviceCache) :
       requestBluetoothDevice()).
@@ -188,7 +188,7 @@ function connectDeviceAndCacheCharacteristic(device) {
   if (device.gatt.connected && characteristicCache) {
     return Promise.resolve(characteristicCache);
   }
-
+  Sound('creak');
   log('Подключение к GATT серверу ...');
 
   return device.gatt.connect().
@@ -257,11 +257,17 @@ function log(data, type = '') {
 	if (isTerminalAutoScrolling) {
     scrollElement(terminalContainer);
   }
+
+	if (savelog == true) {
+		LocalStorageEntry(getDateTime(), data);
+	//  console.log(getDateTime());
+	}
 }
 
 // Отключиться от подключенного устройства
 function disconnect(form) {
-	openTermForm(1);
+	Sound('click');
+//	openTermForm(1);
 
   if (deviceCache) {
     log('Отключение от Bluetooth-устройства "' + deviceCache.name + '" ...');
@@ -284,7 +290,9 @@ function disconnect(form) {
     characteristicCache = null;
   }
 
-  deviceCache = null;	// если не обнулять, то автоматическое подключение к последнему устройству
+  if (checkcode == true || checkcode == "true") {
+	deviceCache = null;	// если не обнулять, то автоматическое подключение к последнему устройству
+  } 
   
   connectionFlag = false;
   	openForm(form);

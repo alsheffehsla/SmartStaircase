@@ -12,7 +12,7 @@
 /*	border-radius: 10px;outline: 1px solid orange;	*/
 }
 
-.tab-form[id="11form-scenario-set"] div.range_Bright {
+.tab-form[id="form-scenario-set"] div.range_Bright {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;
@@ -30,27 +30,26 @@
 /*		border-radius: 10px;outline: 1px solid orange;    временная рамка - удалить  */
 		position: relative;
 	}
-
-		/* ----- Форма Настройки приложения ----- */
-		.tab-form[id="8form-app-settings"] div {
+		.tab-form[id="form-app-settings"] div {
 			position: relative;
+			width: 270px;
 			top: 0;
-			left: -20px;
+			left: -30px;
 		}
-			.tab-form[id="10form-stair-settings"] div {
+			.tab-form[id="form-stair-settings"] div {
 				width: 400px;
 				position: relative;
 				top: 0;
 				left: -70px;
 			}
-				.tab-form[id="11form-scenario-set"] div {
+				.tab-form[id="form-scenario-set"] div {
 					width: 400px;
 					position: relative;
 					top: 0;
 					left: -100px;
 				}
-					.tab-form[id="10form-stair-settings"],
-					.tab-form[id="11form-scenario-set"] {
+					.tab-form[id="form-stair-settings"],
+					.tab-form[id="form-scenario-set"] {
 						width: 260px;
 					}
 /* ----- Временный блок - скрытие формы ----- 
