@@ -1,6 +1,7 @@
 
 let StandBy, DefaultSettings, Night, Cycle, Up, Down, AllStep, Different, Towards, SOS, Luminescent;
 let backFormFlag = false;
+let timerID;
 
  let passForm = document.getElementById('form-auth'); 
  let inputPass = document.getElementById('input_box');
@@ -101,6 +102,7 @@ function OnOffStaircase(val) {
 		document.getElementById("btn_Off_Staircase2").style.display = "none";
 		document.getElementById("btn_On_Staircase").style.display = "block";
 		document.getElementById("btn_On_Staircase2").style.display = "block";
+		timerID = setInterval(()=> send('@X'), 10000);		// (0x40, 0x58)
 	}
 }
 
