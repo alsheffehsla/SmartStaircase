@@ -75,9 +75,10 @@ void setup() {
     EEPROM.put(0, default_Array);                   // запишем в память массив с дефолтными настройками, начиная с адреса 0
   }
 
+  Serial.begin(9600);         // раскоментировать для отладки
+
   Tlc.init(0);                                      // гасим все ступени
   btSerial.begin(57600);                            // открываем последовательный порт на скорости 57600
-//  Serial.begin(9600);         // раскоментировать для отладки
   EEPROM.get(0, data_Array);                      	// загружаем из памяти в рабочий массив настройки пользователя
   startTime = millis();                             // сохраняем в переменную время старта в мс.
 
@@ -91,8 +92,10 @@ void setup() {
 //----------- Основной цикл ----------------------------------------------------------------------------------------------------------------
 void loop() {
   
-  currentStandByTime = millis();                                              // пишем текущее время в переменную
-  if (currentStandByTime - standByTime >= 30000) Flags_Array[0] = false;      // если время входа в режим StandBy больше текущего времени на 30 сек., снимаем флаг StandBy
+  if (Flags_Array[0] == true) {                                                // если StandBy режим
+    currentStandByTime = millis();                                              // пишем текущее время в переменную
+    if (currentStandByTime - standByTime >= 30000) Flags_Array[0] = false;      // если время входа в режим StandBy больше текущего времени на 30 сек., снимаем флаг StandBy
+  }
 
   if (DataSerialAvailable()) {                         // проверяем, если data_flag установлен
       data_flag = false;                                   // сбрасываем флаг
@@ -100,49 +103,49 @@ void loop() {
   } else {
 
 
-      int top = sensorsCheck(TopSensor, data_Array[7]);           // опрашиваем верхний датчик
-      int bottom = sensorsCheck(BottomSensor, data_Array[7]);     // опрашиваем нижний датчик 
+      if (!Flags_Array[0] && DayOrNight()) {              // если Ночь и не режим ожидания 
+        if (!tumbler) emergencyLighting(1);                 // если не режим выключатель, включаем дежурную подсветку крайних ступеней
+        stop = false;                                       // снимаем СТОП-флаг
+        allStair = false;												            // снимаем флаг функции allStairWork()
 
-      if (bottom < data_Array[4] || top < data_Array[4]) {			// если нижний или верхний меньше расстояния для выключателя
-          tumblerCount ++;												// увеличиваем счетчик выключателя
-          if (tumbler && tumblerCount == 5) {								// если режим выключатель уже включен и счетчик достиг 5
-            all(0, 0);														// выключаем все ступени
-            tumbler = 0;													// сбрасываем флаг выключателя
-            tumblerCount = 0;												// сбрасываем счетчик
-          } else if (!tumbler && tumblerCount == 5) {					// если режим выключатель выключен и счетчик достиг 5
-            all(data_Array[10], 1);											// включаем все ступени
-            tumbler = 1;													// поднимаем флаг выключателя
-            tumblerCount = 0;												// сбрасываем счетчик
-          }
-      } else tumblerCount = 0;										// сбрасываем счетчик
+        int top = sensorsCheck(TopSensor, data_Array[7]);           // опрашиваем верхний датчик
+        int bottom = sensorsCheck(BottomSensor, data_Array[7]);     // опрашиваем нижний датчик
 
-
-
-      if (!Flags_Array[0] && !tumbler && DayOrNight()) {            // если Ночь и не режим ожидания и не режим выключатель
-          emergencyLighting(1);                                        	// включаем дежурную подсветку крайних ступеней
-          stop = false;                                               	// снимаем СТОП-флаг
-          allStair = false;												// снимаем флаг функции allStairWork()
-          if (bottom > data_Array[4] && bottom <= data_Array[3]) {		// если нижний датчик больше расстояния выключателя и меньше установленного
-            startMotionTime = millis();										// пишем время старта
-            up(0, data_Array[10], data_Array[14], 1, 1);					// запускаем включение лестницы вверх
-            delay (data_Array[12]);
-            if (!allStair) {												// если не включена вся лестница
-              allStair = false;												// снимаем флаг функции allStairWork()
-              up(data_Array[10], 0, data_Array[14], 0, 1);					// запускаем тушение лестницы вверх
+        if (bottom < data_Array[4] || top < data_Array[4]) {			// если нижний или верхний меньше расстояния для выключателя
+            tumblerCount ++;												                // увеличиваем счетчик выключателя
+            if (tumbler && tumblerCount == 5) {								      // если режим выключатель уже включен и счетчик достиг 5
+              all(0, 0);														                  // выключаем все ступени
+              tumbler = 0;													                  // сбрасываем флаг выключателя
+              tumblerCount = 0;												                // сбрасываем счетчик
+            } else if (!tumbler && tumblerCount == 5) {					    // если режим выключатель выключен и счетчик достиг 5
+              all(data_Array[10], 1);											            // включаем все ступени
+              tumbler = 1;													                  // поднимаем флаг выключателя
+              tumblerCount = 0;												                // сбрасываем счетчик
             }
-            
-          } else if (top > data_Array[4] && top <= data_Array[2]) {		// аналогично с нижним датчиком
-                startMotionTime = millis();
-                down(0, data_Array[10], data_Array[14], 1, 1);
-                delay (data_Array[12]);
+        } else tumblerCount = 0;										              // сбрасываем счетчик
+
+        if (!tumbler && bottom > data_Array[4] && bottom <= data_Array[3]) {		// если не режим выключателя, а нижний датчик больше расстояния выключателя и меньше установленного
+          startMotionTime = millis();										                          // пишем время старта
+          up(0, data_Array[10], data_Array[14], 1, 1);					                  // запускаем включение лестницы вверх
+          delay (data_Array[12]);
+          if (!allStair) {												                                // если не включена вся лестница
+            allStair = false;												                                // снимаем флаг функции allStairWork()
+            up(data_Array[10], 0, data_Array[14], 0, 1);					                  // запускаем тушение лестницы вверх
+          }
+          
+        } else if (!tumbler && top > data_Array[4] && top <= data_Array[2]) {		  // аналогично с нижним датчиком
+            startMotionTime = millis();
+            down(0, data_Array[10], data_Array[14], 1, 1);
+            delay (data_Array[12]);
             if (!allStair) {
               allStair = false;
               down(data_Array[10], 0, data_Array[14], 0, 1);
             }
           }
-      } else if (!Flags_Array[0] && !tumbler) {                                  // если не режим ожидания
-            Tlc.setAll(0);                                                       // если День - тушим все ступени
-            Tlc.update();                                                        // применяем изменения
+
+      } else if (!Flags_Array[0] && !tumbler) {                                   // если не режим ожидания и не режим выключателя
+            Tlc.setAll(0);                                                          // если День - тушим все ступени
+            Tlc.update();                                                           // применяем изменения
         }
     }
 }
@@ -155,28 +158,30 @@ boolean DataSerialAvailable(){
       data_flag = true;                             // устанавливаем флаг, что данные получены
       delay(1);                                     // маленькая задержка (без нее коряво работает)
   }
-  // здесь проверяем длинные пакеты с данными для настроек. Общий пакет разбит на части по 20 Байт и содержит дополнительные символы // 
-  if(dataIn.endsWith("^")) {                        // если принятая строка заканчивается на промежуточный символ "^"
-    delay(100);                                                     // необходимая задержка для синхронизации следующей посылки
-    dataCollect += dataIn.substring(0, dataIn.length() - 1);        // сохраняем строку без последнего символа
-    dataIn = "";                                                    // очищаем входную строку
-    data_flag = false;                                              // снимаем флаг
+
+  // здесь проверяем длинные пакеты с данными для настроек. Общий пакет разбит на части по 20 Байт и содержит дополнительные символы //  
+  if (dataIn.endsWith("^")) {                        // если принятая строка заканчивается на промежуточный символ "^"
+      dataCollect += dataIn.substring(0, dataIn.length() - 1);     // сохраняем строку без последнего символа   
+      dataCollect.replace("^",""); 
+      dataIn = "";                                                    // очищаем входную строку
+      data_flag = false;                                              // снимаем флаг
     if (dataCollect.endsWith("|")) {                                // если строка заканчивается "|" (конец посылки)
-      dataCollect = dataCollect.substring(1, dataCollect.length() - 2);       // обрезаем первый (#) и два последних символа (^|) строки
+      dataCollect = dataCollect.substring(1, dataCollect.length() - 2);       // обрезаем первый (#) и два последних символа (#|) строки
+      outData(3, "Set.receive", 0);
+//      Serial.print("dataCollect : ");
+//      Serial.println(dataCollect);
       getSettings(dataCollect);                                         // парсим строку
       dataCollect = "";                                             // обнуляем накопленную подстроку
-    } else {
-          outData(2, dataCollect, 0);               // иначе - сообщение пользователю "Неверные данные"
-        }
-  }
- 
+      }
+  } else if (dataIn.length() >= 20) outData(2, dataIn,0);
+
   if (dataIn.indexOf("$") != -1) {              // если строка содержит символ '$'
     stop = true;									                  // поднимаем СТОП-флаг
     dataIn = "";                                    // очищаем входные данные
     data_flag = false;
   }
   
-  if (dataIn == "@X") {                         // если строка содержит @X - опрос состояния
+  if (dataIn == "@X") {                         // если строка = @X - опрос состояния
     statusMode();                                   // отвечаем на запрос
     dataIn = "";                                    // очищаем входные данные
     data_flag = false;
@@ -216,12 +221,12 @@ void DataParse() {
 
     //::::::: Блок вывода данных из рабочего массива :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://  
       case 0x26:                                     // если &
-		for (int i=0; i < (int)(sizeof(default_Array)/sizeof(int)); i++){		// вернем целиком рабочий массив
-		  btSerial.print(data_Array[i]);
-		  btSerial.print(":");
-		}
-		btSerial.println();
-        break;
+            for (int i=0; i < (int)(sizeof(default_Array)/sizeof(int)); i++){		// вернем целиком рабочий массив
+              btSerial.print(data_Array[i]);
+              btSerial.print(":");
+            }
+            btSerial.println();
+                break;
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
 
     //::::::: Блок вывода данных из дефолтного массива :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://  
@@ -360,6 +365,12 @@ void getSettings (String data) {                      // получаем бло
       break;
     }
   } while (data != "");                                       // повторяем цикл, пока не закончится блок с данными
+
+  if (addr != 99) {
+    outData(4, "Set.get", 0);                                   // ответ пользователю, что настройки применены
+    all(0, 0);                                                      // выключаем все, чтобы в следующем рабочем цикле применились новые настройки
+  }
+  
   temp = "";                                                  // обнуляем переменные
   val = 0; 
   addr = 0;
@@ -563,8 +574,10 @@ void all (int bright, bool state) {                       // параметры 
   if (stop) {                                                       // если флаг СТОП
     actionSTOP();                                                   	// вызываем функцию СТОП
     return;                                                           	// выходим из цикла
-  }      
-  Tlc.setAll(bright);                                               // всем ступеням назначаем указанную яркость
+  }
+  for (int step = 0; step < data_Array[8]; step ++) {   	          // увеличение ступеней от нижней до верхней с шагом "1"
+    Tlc.set(step, bright);                         	                  // всем ступеням назначаем указанную яркость
+  }
   Tlc.update();                                                     // применяем изменения
   outData(4, state ? "A" : "a", state);                             // ответ пользователю, что команда выполнена
 }
@@ -860,7 +873,7 @@ void allStairWork() {
             }
         }
         
-     for (int step = data_Array[8] - 2; step >= 1; step --) {      // увеличение ступенек от предпоследнейй до второй с шагом "1"
+     for (int step = data_Array[8] - 2; step >= 1; step --) {      // увеличение ступенек от предпоследней до второй с шагом "1"
           for (int pwm = data_Array[10]; pwm >= 0; pwm -= data_Array[14]) { // уменьшение яркости от максимума до "0" 
                if (pwm < data_Array[14]) pwm=0;                        	// проверка, если остаточное значение ШИМ меньше, чем шаг, то приравняем к "0"
                Tlc.set(step, pwm);                            			// выключаем каждую ступень поочередно с плавным уменьшением яркости

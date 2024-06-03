@@ -452,7 +452,7 @@ async function getSettings(val) {
 	if (val) {									// если true
 		send ('&');									// запрос данных из рабочего массива		
 	} else send ('%');								// если false запрос данных из дефолтного массива
-	setTimeout(downloadSettings, 500);				// через таймаут получить данные
+	setTimeout(downloadSettings, 2000);				// через таймаут получить данные
 }
 
 // загрузка настроек лестницы
