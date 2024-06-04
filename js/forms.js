@@ -615,7 +615,9 @@ const scrollbarWidth = parseInt(window.innerWidth) - parseInt(windowInnerWidth);
 // привязываем необходимые элементы
 const bodyElementHTML = document.getElementsByTagName("body")[0];
 const modalBackground = document.getElementsByClassName("modalBackground")[0];
+const modalHelp = document.getElementsByClassName("modalHelp")[0];
 const modalClose = document.getElementsByClassName("modalClose")[0];
+const modalHelpClose = document.getElementsByClassName("modalHelpClose")[0];
 const modalActive = document.getElementsByClassName("modalActive")[0];
 
 // функция для корректировки положения body при появлении ползунка прокрутки
@@ -626,10 +628,15 @@ function bodyMargin() {
 // при длинной странице - корректируем сразу
 bodyMargin();
 
-// событие нажатия на триггер открытия модального окна
-function Reference() {
-    // делаем модальное окно видимым
-    modalBackground.style.display = "block";
+// открытие модального окна
+function Reference(form) {
+    
+	if (form == "reference") {
+		// делаем модальное окно видимым
+		modalBackground.style.display = "block";
+	} else if (form == "help") {
+		modalHelp.style.display = "block";
+	}
 
     // если размер экрана больше 1366 пикселей (т.е. на мониторе может появиться ползунок)
     if (windowInnerWidth >= 1366) {
@@ -640,9 +647,16 @@ function Reference() {
     modalActive.style.left = "calc(50% - " + (175 - scrollbarWidth / 2) + "px)";
 };
 
-// нажатие на крестик закрытия модального окна
+// нажатие на крестик закрытия окна Справка
 modalClose.addEventListener("click", function () {
     modalBackground.style.display = "none";
+    if (windowInnerWidth >= 1366) {
+        bodyMargin();
+    }
+});
+// нажатие на крестик закрытия окна Помощь
+modalHelpClose.addEventListener("click", function () {
+    modalHelp.style.display = "none";
     if (windowInnerWidth >= 1366) {
         bodyMargin();
     }
@@ -652,6 +666,14 @@ modalClose.addEventListener("click", function () {
 modalBackground.addEventListener("click", function (event) {
     if (event.target === modalBackground) {
         modalBackground.style.display = "none";
+        if (windowInnerWidth >= 1366) {
+            bodyMargin();
+        }
+    }
+});
+modalHelp.addEventListener("click", function (event) {
+    if (event.target === modalHelp) {
+        modalHelp.style.display = "none";
         if (windowInnerWidth >= 1366) {
             bodyMargin();
         }
