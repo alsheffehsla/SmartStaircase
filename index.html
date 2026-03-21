@@ -480,6 +480,21 @@
 		<script type="text/javascript">
 			document.getElementById("form-general").style.display = "block";
 		</script>
-		<script src="js/companion.js" data-service-worker="sw.js"></script>
+		<!-- <script src="js/companion.js" data-service-worker="sw2.js"></script> -->
+		<script>
+		  if ("serviceWorker" in navigator) {
+			window.addEventListener("load", () => {
+			  navigator
+				.serviceWorker
+				.register("/sw.js")
+				.then((registration) => {
+				  console.log("ServiceWorker зарегистрирован:", registration.scope);
+				})
+				.catch((error) => {
+				  console.log("Ошибка регистрации ServiceWorker:", error);
+				});
+			});
+		  }
+		</script>
 	</body>
 </html>
