@@ -6,8 +6,6 @@ const urlsToCache = [
   "/SmartStaircase/js/forms.js",
   "/SmartStaircase/js/settings.js",
   "/SmartStaircase/js/terminal.js",
-  "/SmartStaircase/js/sw-toolbox.js",
-  "/SmartStaircase/js/companion.js",
   "/SmartStaircase/styles/styles.css",
   "/SmartStaircase/styles/buttons.css",
   "/SmartStaircase/styles/forms.css",
