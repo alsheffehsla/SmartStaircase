@@ -62,9 +62,9 @@
 		  "form_factor": "wide"
 		}
 	],
-    "start_url": "/?source=pwa",
+    "start_url": "/SmartStaircase/",
     "id": "/?source=pwa",
-    "scope": "/",
+    "scope": "/SmartStaircase/",
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
     "display": "standalone"
