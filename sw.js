@@ -1,6 +1,6 @@
 const CACHE_NAME = "smartstaircase-cache-v1";
 const urlsToCache = [
-  "/",
+  "/SmartStaircase/",
   "/SmartStaircase/index.html",
   "/SmartStaircase/js/main.js",
   "/SmartStaircase/js/forms.js",
