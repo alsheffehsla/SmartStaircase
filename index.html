@@ -716,7 +716,7 @@
 			window.addEventListener("load", () => {
 			  navigator
 				.serviceWorker
-				.register("sw.js")							//	<!-- GitHub -->
+				.register("./sw.js")							//	<!-- GitHub -->
 			//	.register("/smartstaircase_group/smartstaircase/sw.js")		//	<!-- GitLab Petrsu -->
 				.then((registration) => {
 				  console.log("ServiceWorker зарегистрирован:", registration.scope);
