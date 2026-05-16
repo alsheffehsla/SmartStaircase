@@ -1,23 +1,23 @@
 const CACHE_NAME = "smartstaircase-cache-v1";
 const urlsToCache = [
-  "/smartstaircase_group/smartstaircase/",
-  "/smartstaircase_group/smartstaircase/index.html",
-  "/smartstaircase_group/smartstaircase/js/main.js",
-  "/smartstaircase_group/smartstaircase/js/forms.js",
-  "/smartstaircase_group/smartstaircase/js/settings.js",
-  "/smartstaircase_group/smartstaircase/js/terminal.js",
-  "/smartstaircase_group/smartstaircase/styles/styles.css",
-  "/smartstaircase_group/smartstaircase/styles/buttons.css",
-  "/smartstaircase_group/smartstaircase/styles/forms.css",
-  "/smartstaircase_group/smartstaircase/styles/inputs.css",
-  "/smartstaircase_group/smartstaircase/styles/terminal.css",
-  "/smartstaircase_group/smartstaircase/images/blue.jpg",
-  "/smartstaircase_group/smartstaircase/images/green.jpg",
-  "/smartstaircase_group/smartstaircase/images/yellow.jpg",
-  "/smartstaircase_group/smartstaircase/images/red.jpg",
-  "/smartstaircase_group/smartstaircase/images/modalCross.svg",
-  "/smartstaircase_group/smartstaircase/sounds/click.mp3",
-  "/smartstaircase_group/smartstaircase/sounds/creak.mp3"
+  "/SmartStaircase/",
+  "/SmartStaircase/index.html",
+  "/SmartStaircase/js/main.js",
+  "/SmartStaircase/js/forms.js",
+  "/SmartStaircase/js/settings.js",
+  "/SmartStaircase/js/terminal.js",
+  "/SmartStaircase/styles/styles.css",
+  "/SmartStaircase/styles/buttons.css",
+  "/SmartStaircase/styles/forms.css",
+  "/SmartStaircase/styles/inputs.css",
+  "/SmartStaircase/styles/terminal.css",
+  "/SmartStaircase/images/blue.jpg",
+  "/SmartStaircase/images/green.jpg",
+  "/SmartStaircase/images/yellow.jpg",
+  "/SmartStaircase/images/red.jpg",
+  "/SmartStaircase/images/modalCross.svg",
+  "/SmartStaircase/sounds/click.mp3",
+  "/SmartStaircase/sounds/creak.mp3"
 ];
 
 // Установка: кэшируем основной набор
