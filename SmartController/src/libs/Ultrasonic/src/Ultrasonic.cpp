@@ -18,6 +18,8 @@ Ultrasonic::Ultrasonic(int TP, int EP)
 
 long Ultrasonic::Timing()
 {
+  duration = 0;
+
   digitalWrite(Trig_pin, LOW);
   delayMicroseconds(2);
   digitalWrite(Trig_pin, HIGH);
@@ -29,11 +31,14 @@ long Ultrasonic::Timing()
 
 long Ultrasonic::Ranging(int sys)
 {
+  distance_cm = 0;
+  distance_inc = 0;
+  
   Timing();
-  distacne_cm = duration /29 / 2 ;
+  distance_cm = duration /29 / 2 ;
   distance_inc = duration / 74 / 2;
   if (sys)
-  return distacne_cm;
+  return distance_cm;
   else
   return distance_inc;
 }

@@ -22,7 +22,7 @@ class Ultrasonic
     private:
     int Trig_pin;
     int Echo_pin;
-    long  duration,distacne_cm,distance_inc;
+    long  duration,distance_cm,distance_inc;
     
 };
 

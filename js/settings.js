@@ -83,7 +83,6 @@ function GetStartSettings() {
 			fone = tempfone;
 		}
 	document.body.style.backgroundImage = fone;
-		
 	
 	let tempsound = localStorage.getItem('SOUND');
 	if (tempsound == null) {
@@ -118,6 +117,62 @@ function GetStartSettings() {
 		savelog = localStorage.getItem('LOG');
 	} else {
 		savelog = templog;
+	}
+
+	let tempserver = localStorage.getItem('SERVER');
+	if (tempserver == null) {
+		LocalStorageEntry('SERVER', defaultServer);
+		server = localStorage.getItem('SERVER');
+	} else {
+		server = tempserver;
+	}
+
+	let tempport = localStorage.getItem('PORT');
+	if (tempport == null) {
+		LocalStorageEntry('PORT', defaultPort);
+		port = localStorage.getItem('PORT');
+	} else {
+		port = tempport;
+	}
+
+	let tempusername = localStorage.getItem('USERNAME');
+	if (tempusername == null) {
+		LocalStorageEntry('USERNAME', defaultUsername);
+		username = localStorage.getItem('USERNAME');
+	} else {
+		username = tempusername;
+	}
+
+	let tempuserpass = localStorage.getItem('USERPASS');
+	if (tempuserpass == null) {
+		LocalStorageEntry('USERPASS', defaultUserpass);
+		userpass = localStorage.getItem('USERPASS');
+	} else {
+		userpass = tempuserpass;
+	}
+
+	let tempdevicetopic = localStorage.getItem('DEVICETOPIC');
+	if (tempdevicetopic == null) {
+		LocalStorageEntry('DEVICETOPIC', defaultDeviceTopic);
+		devicetopic = localStorage.getItem('DEVICETOPIC');
+	} else {
+		devicetopic = tempdevicetopic;
+	}
+
+	let temptopic1 = localStorage.getItem('TOPIC1');
+	if (temptopic1 == null) {
+		LocalStorageEntry('TOPIC1', defaultTopik_1);
+		topik1 = localStorage.getItem('TOPIC1');
+	} else {
+		topik1 = temptopic1;
+	}
+
+	let temptopic2 = localStorage.getItem('TOPIC2');
+	if (temptopic2 == null) {
+		LocalStorageEntry('TOPIC2', defaultTopik_2);
+		topik2 = localStorage.getItem('TOPIC2');
+	} else {
+		topik2 = temptopic2;
 	}
 }
 
@@ -182,6 +237,16 @@ async function settingsForm(formNodes) {
 		case 'SaveLog':
 			savelog = checked;
 			LocalStorageEntry('LOG', checked);
+
+			// Если лог включен, записываем тестовое событие
+			if (checked == true || checked == "true") {
+				writeToIndexedDB({
+					type: 'system',
+					command: 'log_start',
+					details: 'Логирование включено'
+				});
+			}
+
 			break;
 	  }
 	  
@@ -204,6 +269,13 @@ function LocalStorageEntry(key, value) {
 			localStorage.setItem('CHECKPASS', checkpass);
 			localStorage.setItem('CHECKCODE', checkcode);
 			localStorage.setItem('LOG', savelog);
+			localStorage.setItem('SERVER', server);
+			localStorage.setItem('PORT', port);
+			localStorage.setItem('USERNAME', username);
+			localStorage.setItem('USERPASS', userpass);
+			localStorage.setItem('DEVICETOPIC', devicetopic);
+			localStorage.setItem('TOPIC1', topik1);
+			localStorage.setItem('TOPIC2', topik2);
 		}
 	}
 }

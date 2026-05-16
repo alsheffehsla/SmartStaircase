@@ -1,0 +1,8 @@
+{
+  "name": "Arduino TLC5940 Library",
+  "version": "x.x.x",
+  "authors": {
+    "name": "Alex Leone",
+    "email": "acleone ~AT~ gmail.com"
+  }
+}

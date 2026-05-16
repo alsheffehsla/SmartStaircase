@@ -9,6 +9,8 @@
 	justify-content: center;
 	align-items: center;
 	text-align: center;
+	position: relative;
+    z-index: 10;
 /*	border-radius: 10px;outline: 1px solid orange;	*/
 }
 
@@ -30,7 +32,8 @@
 /*		border-radius: 10px;outline: 1px solid orange;    временная рамка - удалить  */
 		position: relative;
 	}
-		.tab-form[id="form-app-settings"] div {
+		.tab-form[id="form-app-settings"] div,
+		.tab-form[id="form-security-mode"] div {
 			position: relative;
 			width: 270px;
 			top: 0;
@@ -52,6 +55,12 @@
 					.tab-form[id="form-scenario-set"] {
 						width: 260px;
 					}
+						.tab-form[id="form-security-mode"] div {
+							left: -60px;
+							margin-bottom: 10rem;
+						}
+
+
 /* ----- Временный блок - скрытие формы ----- 
 .tab-form[id="form-general"] {
 	display: block;

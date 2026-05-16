@@ -52,15 +52,23 @@ button[id="btn_Skip"] {
 		button[id="btn_Quit_2"], 
 		button[id="btn_Back_To_Gen"],
 		button[id="btn_Back_With_Auth"],
-		button[id="btn_Back_To_With_Auth"],
 		button[id="btn_Back_To_Non_Auth"] {
 
 			margin-bottom: 80px;
 		}
-	/*		button[id="btn_Back_Menu_Stair"], */
-			button[id="btn_Back_Stair_Settings"] {
-				margin-bottom: 0px;
+
+			button[id="btn_Back_To_With_Auth"] {
+				margin-bottom: 40px;
 			}
+
+		/*		button[id="btn_Back_Menu_Stair"], */
+				button[id="btn_Back_Stair_Settings"] {
+					margin-bottom: 0px;
+				}
+
+				button[id="btn_Back_With_Auth_MQTT"] {
+					
+				}
 
 /* ----- Миди кнопки ----- */		
 .button_pool {
@@ -111,19 +119,25 @@ button[id="btn_Skip"] {
 						font-size: 21px;
 					}
 					
+	.btn-details:active {
+		font-size: 10px;
+		padding: 0px 0px;
+	}
+
+
 /* ----- Мини кнопки ----- */
 .mini-button {
 	background: #dae8fc;
-	width: 65px;
+	width: 85px; 
 	height: 23px;
-	position: relative;
-	left: 65px;
+	position: static;
+	/*  left: 65px;  */
 	color: black;
 	font-size: 10px;
 	text-transform: none;
 	display: block;
-	margin-top: -5px;
-	border: 2px solid #6C8EBF;
+	margin-top: 2px;
+	border: 1px solid #6C8EBF;
 	border-radius: 5px;
 }
 /* ----- Вид мини кнопок при наведении мыши ----- */
@@ -136,9 +150,13 @@ button[id="btn_Skip"] {
 					font-size: 9px;
 					padding: 0px 0px;
 					transition: all 0.2s;
-					transform: translateY(4px);
+					transform: translateY(2px);
 				}
-					
+		
+		.mini-button[id="btn-apply-filters"],
+					[id="btn-reset-filters"] {
+			width: 140px;
+		}
 
 /* удалить после обработки кнопок*/
 #btn_Off_Staircase,
@@ -146,7 +164,9 @@ button[id="btn_Skip"] {
 #btn_Off_Staircase2,
 #btn_On_Staircase2,
 #btn_Off_Staircase3,
-#btn_On_Staircase3 {  
+#btn_On_Staircase3,
+#btn_On_Security_Mode,   
+#btn_Off_Security_Mode {  
 
 	background: #ff99dd;
 	color: white;
@@ -158,15 +178,52 @@ button[id="btn_Skip"] {
 }
 	#btn_Off_Staircase,
 	#btn_Off_Staircase2,
-	#btn_Off_Staircase3 {
+	#btn_Off_Staircase3, 
+	#btn_Off_Security_Mode {
 		display: none;
 	}
 		#btn_On_Staircase,
 		#btn_On_Staircase2,
-		#btn_On_Staircase3 {
+		#btn_On_Staircase3,
+		#btn_On_Security_Mode {
 			background: #33ffdd;
 		}
 #btn_Non_Connect {
 	background: gray;
 }
 
+.logs-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.logs-buttons button {
+    padding: 0px 0px;
+    font-size: 9px;
+}
+
+
+.btn-details {
+	width: 80px;
+	height: 20px;
+	margin-top: 0px;
+    background: #2196f3;
+    color: white;
+    border: none;
+    padding: 0px 0px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.btn-details:hover {
+    background: #0b7dda;
+}
+
+#btn-chart-line,
+#btn-chart-bar {
+	width: 100px;
+    height: 25px;
+	font-size: 14px;
+	margin-top: 15px;
+}

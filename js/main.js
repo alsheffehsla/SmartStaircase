@@ -12,26 +12,36 @@ let dataExchange = false;
 let passFlag = false;
 let codeFlag = false;
 let authorization = false;
-let connectionFlag = false;
+let connectionFlagBT = false;
+let connectionFlagWiFi = false;
 
 
-// Проверка кода подключения к устройству //
-function choiseInput(inputName, form, backform) {
+////////////////////////////// Проверка кода доступа при подключении к устройству по Bluetooth///////////////////////////////
+function choiseInputBt(inputName, form, backform) {
 	Sound('click');
 	let choise = document.getElementById(inputName);
 	
 	if (checkcode == false || checkcode == "false") {
 		codeFlag = true;
 		closeAllMsg();
-		closeAllForms();		
-		connection(form, backform);
+		closeAllForms();	
+		
+	//	openForm(form);								// временное, удалить!!!!!
+
+		connectionBt(form, backform);   						//  восстановить !!!
+
+
 	} else if (choise.value != "" && choise.value == code) {
 		choise.value = '';
 		codeFlag = true;
 		closeAllMsg();
 		closeAllForms();
 	//	openTermForm();
-		connection(form, backform);
+
+
+	//	openForm(form);								// временное, удалить!!!!!
+
+		connectionBt(form, backform);   						//  восстановить !!!
 		
 	} else if (choise.value == '') {
 		noneCodeInput();
@@ -40,43 +50,47 @@ function choiseInput(inputName, form, backform) {
 			MsgNone();
 			}
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// обработчик подключения к устройству по кнопке //
-async function connection(form, backform) {
-//	openTermForm(1);
+
+////////////////////////////////// Проверка кода доступа при подключении к устройству по WiFi///////////////////////////////
+function choiseInputWiFi(inputName, form, backform) {
 	Sound('click');
-	await connect();		// вызов функции подключения
-
-	if (connectionFlag) {
-		openForm(form);
-		let targetForm = document.getElementById(form);
-		targetForm.insertAdjacentHTML('afterbegin',
-      '<span class="green-msg-connect">Соединение установлено !</span>');
-		  if (codeFlag) {
-			  targetForm.insertAdjacentHTML('afterbegin',
-		  '<span class="green-msg-access">Полный доступ к управлению</span>');
-		  } else {
-			  targetForm.insertAdjacentHTML('afterbegin',
-		  '<span class="green-msg-no-access">Управление лестницей ограничено</span>');
-		  }
-		openTermForm(0);
-	} else {
-		alert ('Соединение потеряно!');
-		openForm(backform);
-		openTermForm(0);
-	}
+	let choise = document.getElementById(inputName);
+	
+	if (checkcode == false || checkcode == "false") {
+		codeFlag = true;
+		closeAllMsg();
+		closeAllForms();		
+		connectionWiFi(form, backform);   //          ??????????????????????
+	} else if (choise.value != "" && choise.value == code) {
+		choise.value = '';
+		codeFlag = true;
+		closeAllMsg();
+		closeAllForms();
+	//	openTermForm();
+		connectionWiFi(form, backform);     //          ??????????????????????
+		
+	} else if (choise.value == '') {
+		noneCodeInput();
+		}else {
+			choise.value = '';  // Обнулить текстовое поле
+			MsgNone();
+			}
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Обработчик выбранных чекбоксов включения сценариев //
+
+//////////////////////////////////// Обработчик выбранных чекбоксов включения сценариев /////////////////////////////////////
 function checkedCheckbox() {
 	Sound('click');
 	const chbArray = {};
 	let dataOut = new String('@');
 	document.querySelectorAll('label:has(+ input:checked)').forEach((elem) => {
 		let checkedBoxes = elem.innerHTML;
-//		console.log(checkedBoxes);
+		console.log(checkedBoxes);
 		let labelID = elem.getAttribute('id');
-//		console.log(labelID);
+		console.log(labelID);
 		chbArray[checkedBoxes] = labelID;
 	
 		switch (checkedBoxes) {
@@ -121,135 +135,51 @@ function checkedCheckbox() {
 		}
 		
 		console.log(dataOut);		// удалить!!
-		send (dataOut);
+		sendOut(dataOut);				// отправить
 		dataOut = '';
 		
-	for (key in chbArray) {			// удалить !!
+	for (key in chbArray) {			// удалить !! и выше chbArray тоже
 		console.log(`${key} = ${chbArray[key]}`);
 	}
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Обработка события отправки формы
+
+/////////////////////////////////////////// Обработка события отправки формы ////////////////////////////////////////////////
 sendForm.addEventListener('submit', function(event) {
-  event.preventDefault(); // Предотвратить отправку формы
-  send(inputField.value); // Отправить содержимое текстового поля
+  event.preventDefault(); 		// Предотвратить отправку формы
+  sendOut(inputField.value); 	// Отправить содержимое текстового поля   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
   inputField.value = '';  // Обнулить текстовое поле
   inputField.focus();     // Вернуть фокус на текстовое поле
 });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Кэш объекта выбранного устройства
-let deviceCache = null;
 
-// Кэш объекта характеристики
-let characteristicCache = null;
+//////////////////////////////////////////// Распределение каналов отправки /////////////////////////////////////////////////
+async function sendOut(data){
+	dataInput = '';
+	if(connectionFlagWiFi){
+		sendWiFi(data); 			// Отправить по WiFi
+	} else	sendBt(data);				// по Bluetooth
 
-// Промежуточный буфер для входящих данных
-let readBuffer = '';
-
-// Запуск выбора Bluetooth устройства и подключение к выбранному
-function connect() {
-  return (deviceCache ? Promise.resolve(deviceCache) :
-      requestBluetoothDevice()).
-      then(device => connectDeviceAndCacheCharacteristic(device)).
-      then(characteristic => startNotifications(characteristic)).
-      catch(error => log(error));
-}
-
-// Запрос выбора Bluetooth устройства
-function requestBluetoothDevice() {
-  log('Запрос устройства Bluetooth...');
-
-  return navigator.bluetooth.requestDevice({
-    filters: [{services: [0xFFE0]}],
-  }).
-      then(device => {
-        log('выбрано Bluetooth устройство "'+ device.name +'"');
-        deviceCache = device;
-        deviceCache.addEventListener('gattserverdisconnected',
-            handleDisconnection);
-
-        return deviceCache;
-      });
-}
-
-// Обработчик разъединения
-function handleDisconnection(event) {
-  let device = event.target;
-
-  log('Bluetooth-устройство "'+ device.name +'" отключено, переподключение...');
-
-  connectDeviceAndCacheCharacteristic(device).
-      then(characteristic => startNotifications(characteristic)).
-      catch(error => log(error));
-}
-
-// Подключение к определенному устройству, получение сервиса и характеристики
-function connectDeviceAndCacheCharacteristic(device) {
-  if (device.gatt.connected && characteristicCache) {
-    return Promise.resolve(characteristicCache);
-  }
-  Sound('creak');
-  log('Подключение к GATT серверу ...');
-
-  return device.gatt.connect().
-      then(server => {
-        log('GATT сервер подключен, получение сервиса...');
-
-        return server.getPrimaryService(0xFFE0);
-      }).
-      then(service => {
-        log('Сервис найден, получение характеристики...');
-
-        return service.getCharacteristic(0xFFE1);
-      }).
-      then(characteristic => {
-        log('Характеристика получена');
-        characteristicCache = characteristic;
-
-        return characteristicCache;
-      });
-}
-
-// Включение получения уведомлений об изменении характеристики
-function startNotifications(characteristic) {
-  log('Запуск уведомлений...');
-
-  return characteristic.startNotifications().
-      then(() => {
-        log('Уведомления запущены');
-		connectionFlag = true;
-        characteristic.addEventListener('characteristicvaluechanged',
-            handleCharacteristicValueChanged);
-      });
-}
-
-// Получение данных
-function handleCharacteristicValueChanged(event) {
-  let value = new TextDecoder().decode(event.target.value);
-	// обработка пакетов размером более 20 Байт
-  for (let c of value) {
-    if (c === '\n') {
-      let data = readBuffer.trim();
-      readBuffer = '';
-
-      if (data) {
-        receive(data);
-      }
+	if (typeof logToIndexedDB === 'function') {
+        await logToIndexedDB(data, 'send', 'Отправка команды');
     }
-    else {
-      readBuffer += c;
-    }
-  }
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Обработка полученных данных
+
+//////////////////////////////////////////// Обработка полученных данных ////////////////////////////////////////////////////
 function receive(data) {
   log(data, 'in');
   dataExchange = true;
   dataInput = data;
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Вывод в терминал
+
+//////////////////////////////////////////// Вывод в терминал ///////////////////////////////////////////////////////////////
 function log(data, type = '') {
   terminalContainer.insertAdjacentHTML('beforeend',
       '<div' + (type ? ' class="' + type + '"' : '') + '>' + data + '</div>');
@@ -258,85 +188,21 @@ function log(data, type = '') {
     scrollElement(terminalContainer);
   }
 
-	if (savelog == true) {
-		LocalStorageEntry(getDateTime(), data);
+	if (savelog == true || savelog == "true") {
+	//	LocalStorageEntry(getDateTime(), data);			// запись логов  в LocalStorage отключил, т.к. добавил IndexedDB
 	//  console.log(getDateTime());
+
+		if (typeof logToIndexedDB === 'function') {					// проверить запись в  БД !!!!!!!!
+			logToIndexedDB(data, 'receive', 'Получен ответ');
+		}
+
 	}
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Отключиться от подключенного устройства
-function disconnect(form) {
-	Sound('click');
-//	openTermForm(1);
 
-  if (deviceCache) {
-    log('Отключение от Bluetooth-устройства "' + deviceCache.name + '" ...');
-    deviceCache.removeEventListener('gattserverdisconnected',
-        handleDisconnection);
-
-    if (deviceCache.gatt.connected) {
-      deviceCache.gatt.disconnect();
-      log('Bluetooth-устройство "' + deviceCache.name + '" отключено');
-    }
-    else {
-      log('Bluetooth-устройство "' + deviceCache.name +
-          '" уже отключено');
-    }
-  }
-
-  if (characteristicCache) {
-    characteristicCache.removeEventListener('characteristicvaluechanged',
-        handleCharacteristicValueChanged);
-    characteristicCache = null;
-  }
-
-  if (checkcode == true || checkcode == "true") {
-	deviceCache = null;	// если не обнулять, то автоматическое подключение к последнему устройству
-  } 
-  
-  connectionFlag = false;
-  	openForm(form);
-	openTermForm(0);
-}
-
-// Отправить данные подключенному устройству
-function send(data) {
-  data = String(data);
-
-  if (!data || !characteristicCache) {
-    return;
-  }
-
-  if (data == '@O') clearInterval(timerID);
-  
-  if (data.length > 20) {
-    data += '|';
-	let chunks = data.match(/(.|[\r\n]){1,19}/g);
-//	chunks += '|';
-	chunks[0] += '^';
-	log(chunks[0], 'out');
-	console.log(chunks[0]);
-  
-    writeToCharacteristic(characteristicCache, chunks[0]);
-
-    for (let i = 1; i < chunks.length; i++) {
-      chunks[i] += '^';
-	  log(chunks[i], 'out');
-	  console.log(chunks[i]);
-	  setTimeout(() => {
-        writeToCharacteristic(characteristicCache, chunks[i]);
-      },i*500);
-    }
-  }
-  else {
-    writeToCharacteristic(characteristicCache, data);
-  }
-
-  log(data, 'out');
-
-}
-
-// Записать значение в характеристику
-function writeToCharacteristic(characteristic, data) {
-  characteristic.writeValue(new TextEncoder().encode(data));
-}
+// Отслеживаем все перезагрузки страницы
+window.addEventListener('beforeunload', function(e) {
+    console.log('Страница будет перезагружена!');
+    console.trace(); 					// Покажет стек вызовов
+});
