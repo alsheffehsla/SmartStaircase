@@ -10,7 +10,8 @@
 		<link href="styles/inputs.css" rel="stylesheet" type="text/css">
 		<link href="styles/terminal.css" rel="stylesheet" type="text/css">
 		<link href="styles/database.css" rel="stylesheet" type="text/css">
-		<link rel="manifest" href="/smartstaircase_group/smartstaircase/manifest.json">
+		<link rel="manifest" href="/smartstaircase/manifest.json">			<!-- GitHub -->
+	<!-- 	<link rel="manifest" href="/smartstaircase_group/smartstaircase/manifest.json">   -->  <!-- GitLab Petrsu -->
 		<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
@@ -715,7 +716,8 @@
 			window.addEventListener("load", () => {
 			  navigator
 				.serviceWorker
-				.register("/smartstaircase_group/smartstaircase/sw.js")
+				.register("/smartstaircase/sw.js")							//	<!-- GitHub -->
+			//	.register("/smartstaircase_group/smartstaircase/sw.js")		//	<!-- GitLab Petrsu -->
 				.then((registration) => {
 				  console.log("ServiceWorker зарегистрирован:", registration.scope);
 				})
