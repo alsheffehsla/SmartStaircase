@@ -130,7 +130,7 @@ function handleCharacteristicValueChanged(event) {
 }
 
 // Отключиться от подключенного устройства
-function disconnect(form) {
+function disconnect() {
 	Sound('click');
 //	openTermForm(1);
 
@@ -161,7 +161,6 @@ function disconnect(form) {
   
   connectionFlagBT = false;
   manageStatusTimer();
-  	openForm(form);
 	openTermForm(0);
 }
 

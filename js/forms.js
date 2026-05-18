@@ -323,12 +323,12 @@ function openForm(needForm) {
 // Разъединение //
 function disconnection(form){
 	if (connectionFlagBT){
-		disconnect('form-connect-with-auth');
+		disconnect();
 	}
 	if (connectionFlagWiFi) {
 		disconnectWiFi();
-		openForm('form-connect-with-auth');
 	}
+	openForm('form-connect-with-auth');
 }
 
 
