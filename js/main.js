@@ -25,21 +25,13 @@ function choiseInputBt(inputName, form, backform) {
 		codeFlag = true;
 		closeAllMsg();
 		closeAllForms();	
-		
-	//	openForm(form);								// временное, удалить!!!!!
-
 		connectionBt(form, backform);   						//  восстановить !!!
-
-
 	} else if (choise.value != "" && choise.value == code) {
 		choise.value = '';
 		codeFlag = true;
 		closeAllMsg();
 		closeAllForms();
 	//	openTermForm();
-
-
-	//	openForm(form);								// временное, удалить!!!!!
 
 		connectionBt(form, backform);   						//  восстановить !!!
 		
@@ -88,10 +80,7 @@ function checkedCheckbox() {
 	let dataOut = new String('@');
 	document.querySelectorAll('label:has(+ input:checked)').forEach((elem) => {
 		let checkedBoxes = elem.innerHTML;
-		console.log(checkedBoxes);
 		let labelID = elem.getAttribute('id');
-		console.log(labelID);
-		chbArray[checkedBoxes] = labelID;
 	
 		switch (checkedBoxes) {
 			case 'Включить все ступени':
@@ -133,14 +122,10 @@ function checkedCheckbox() {
 		if (!dataOut.includes('C')) {		// если в строке нет 'C' (0x43) -(зацикливание не выбрано)
 			dataOut += 'c';          // (0x63)  -  добавим в строку отмену зацикливания
 		}
-		
-		console.log(dataOut);		// удалить!!
+
 		sendOut(dataOut);				// отправить
 		dataOut = '';
-		
-	for (key in chbArray) {			// удалить !! и выше chbArray тоже
-		console.log(`${key} = ${chbArray[key]}`);
-	}
+
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -157,21 +142,18 @@ sendForm.addEventListener('submit', function(event) {
 
 
 //////////////////////////////////////////// Распределение каналов отправки /////////////////////////////////////////////////
-async function sendOut(data){
+function sendOut(data){
 	dataInput = '';
 	if(connectionFlagWiFi){
 		sendWiFi(data); 			// Отправить по WiFi
 	} else	sendBt(data);				// по Bluetooth
 
-	if (typeof logToIndexedDB === 'function') {
-        await logToIndexedDB(data, 'send', 'Отправка команды');
-    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 //////////////////////////////////////////// Обработка полученных данных ////////////////////////////////////////////////////
-function receive(data) {
+ function receive(data) {
   log(data, 'in');
   dataExchange = true;
   dataInput = data;
@@ -180,7 +162,7 @@ function receive(data) {
 
 
 //////////////////////////////////////////// Вывод в терминал ///////////////////////////////////////////////////////////////
-function log(data, type = '') {
+async function log(data, type = '') {
   terminalContainer.insertAdjacentHTML('beforeend',
       '<div' + (type ? ' class="' + type + '"' : '') + '>' + data + '</div>');
 	
@@ -191,11 +173,21 @@ function log(data, type = '') {
 	if (savelog == true || savelog == "true") {
 	//	LocalStorageEntry(getDateTime(), data);			// запись логов  в LocalStorage отключил, т.к. добавил IndexedDB
 	//  console.log(getDateTime());
-
-		if (typeof logToIndexedDB === 'function') {					// проверить запись в  БД !!!!!!!!
-			logToIndexedDB(data, 'receive', 'Получен ответ');
+		if (type == "out") {
+			if (typeof logToIndexedDB === 'function') {
+        	await logToIndexedDB(data, 'send', 'Отправка команды');
+    		}
+		} 
+		if (type == "in") {
+			  if (typeof logToIndexedDB === 'function') {					
+				await	logToIndexedDB(data, 'receive', 'Получен ответ');
+				}
 		}
-
+		if (type == "") {
+			if (typeof logToIndexedDB === 'function') {					
+				await	logToIndexedDB(data, '', 'Получен ответ');
+			}
+		}
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

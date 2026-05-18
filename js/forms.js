@@ -16,6 +16,8 @@ document.getElementById("wr_pass").style.display = "none";
 document.getElementById("wr_code").style.display = "none"; 
 document.getElementById("non_code").style.display = "none";  
 document.getElementById("none_pass").style.display = "none";
+document.getElementById("form-logs-viewer").style.display = "none";
+document.getElementById("modal-pair-analysis").style.display = "none";
 
 /* пишем в поле значение ползунка яркости по умолчанию при загрузке */
 let range = document.querySelector('.range-input');
@@ -100,7 +102,6 @@ function OnOffStaircase(val) {
 		document.getElementById("btn_On_Staircase2").style.display = "none";
 		document.getElementById("btn_Off_Staircase").style.display = "block";
 		document.getElementById("btn_Off_Staircase2").style.display = "block";
-	//	console.log('ID таймера перед очисткой:', window.timerID);		// отладочная строка для проверки назначенного ID
 		if (window.timerID) {
         	clearInterval(window.timerID);
         	window.timerID = null;
@@ -119,8 +120,20 @@ function OnOffStaircase(val) {
 			window.timerID = null; 							// убиваем старый таймер
 		}
 		window.timerID = setInterval(()=> sendOut('@X'), 10000);		// (0x40, 0x58)
-	//	console.log('назначенный ID таймера:', window.timerID);     // отладочная строка для проверки назначенного ID
 	}
+}
+
+// Управление таймером опроса //
+function manageStatusTimer() {
+    const hasConnection = (connectionFlagBT === true || connectionFlagWiFi === true);
+    
+    if (!hasConnection) {
+        // Нет подключения - останавливаем таймер
+        if (window.timerID) {
+            clearInterval(window.timerID);
+            window.timerID = null;			// убиваем таймер
+        }
+    }
 }
 
 // Настройки безопасного режима //
@@ -132,9 +145,7 @@ function OnOffSecurityMode(val) {
 		let secureForm = document.getElementById("form-security-mode");
 		secureForm.querySelectorAll('label:has(+ input:checked)').forEach((elem) => {
 		let checkedBoxes = elem.innerHTML;
-		//console.log(checkedBoxes);
-		//let labelID = elem.getAttribute('id');		//можно удалить
-		//console.log(labelID);						// можно удалить
+
 		switch (checkedBoxes) {
 			case 'Включить контроль датчиков':
 				dataToSend += 'Z';      // (0x5A)
@@ -235,7 +246,7 @@ function openForm(needForm) {
 		if (passFlag) {
 			if (greenMsg){
 				let elem = document.querySelector('#gr_Msg');
-				elem.remove();
+				if (elem) elem.remove();
 				greenMsg = false;
 			}
 			targetForm.insertAdjacentHTML('afterbegin',
@@ -245,7 +256,7 @@ function openForm(needForm) {
 		} else {
 			if (redMsg){
 				let elem = document.querySelector('#red_Msg');
-				elem.remove();
+				if (elem) elem.remove();
 				redMsg = false;
 			}
 			targetForm.insertAdjacentHTML('afterbegin',
@@ -525,7 +536,6 @@ async function serializeForm(formNode) {
 		dataOut += '#';
 		sendOut(dataOut);
 		dataOut = '';
-//  console.log(filtered)  // впоследствии удалить!
 }
 
 
@@ -542,7 +552,6 @@ await	setTimeout(downloadSettings, 2000);				// через таймаут пол
 
 // загрузка настроек лестницы
 function downloadSettings() {
-//	console.log(dataInput);		// удалить !!
 	dataExchange = false;
 	let tempData = dataInput.split(':');
 	tempData.forEach((val, index) => {
@@ -606,7 +615,6 @@ function downloadSettings() {
 
 // загрузка флагов 
 function flagsParser() {
-//	console.log(dataInput);		// удалить !!
 	dataExchange = false;
 	let flagsData = dataInput.split(':');
 	flagsData.forEach((val, index) => {

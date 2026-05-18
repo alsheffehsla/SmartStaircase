@@ -401,24 +401,28 @@ void DataSerial::scenarioParser (String data){                                  
 void DataSerial::outData (int value, String dataOut, byte additional){              // принимаем блок данных (вид сообщения, данные, дополнительные данные)
   switch (value) {                                        // ищем совпадения по значению
     case 1:                                                   // если 1, то 
-      btSerial.print(100);              // вывод сообщения "Неверная команда" со значением команды
+      btSerial.println(100);              // вывод сообщения "Неверная команда" со значением команды
       break;
     case 2:                                                   // если 2, то 
-      btSerial.print(200);              // вывод сообщения "Неверные данные" со значением
+      btSerial.println(200);              // вывод сообщения "Неверные данные" со значением
       break;
     case 3:                                                   // если 3, то 
-      btSerial.print(300);              // вывод сообщения "Команда принята" со значением      
+      btSerial.print(300);              // вывод сообщения "Команда принята" со значением    
+      btSerial.print(",");  
       break;
     case 4:                                                   // если 4, то
       btSerial.print(400);              // вывод сообщения "Команда выполнена" со значением
+      btSerial.print(",");
       break;
     case 5:
       btSerial.print(500);              // вывод сообщения "Состояние ОК" со значением ???????
+      btSerial.print(",");
       break;
     default:
       btSerial.print(600);              // внутренняя ошибка  ????? резерв ???
+      btSerial.print(",");
   }
-  btSerial.print(",");
+
   btSerial.println(dataOut);            // отправка без additional
   // btSerial.print(dataOut + ",");
   // btSerial.println(additional);

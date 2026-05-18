@@ -1,6 +1,6 @@
 // обработчик подключения к устройству по кнопке подключения Bluetooth//
 async function connectionBt(form, backform) {
-	openTermForm(1);
+	// openTermForm(1);
 	Sound('click');
 	await connectBlueTooth();		// вызов функции подключения
 
@@ -160,6 +160,7 @@ function disconnect(form) {
   } 
   
   connectionFlagBT = false;
+  manageStatusTimer();
   	openForm(form);
 	openTermForm(0);
 }
@@ -181,14 +182,14 @@ function sendBt(data) {
 //	chunks += '|';
 	chunks[0] += '^';
 	log(chunks[0], 'out');
-	console.log(chunks[0]);
+	// console.log(chunks[0]);
   
     writeToCharacteristic(characteristicCache, chunks[0]);
 
     for (let i = 1; i < chunks.length; i++) {
       chunks[i] += '^';
 	  log(chunks[i], 'out');
-	  console.log(chunks[i]);
+	  // console.log(chunks[i]);
 	  setTimeout(() => {
         writeToCharacteristic(characteristicCache, chunks[i]);
       },i*500);

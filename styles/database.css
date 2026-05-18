@@ -1,12 +1,13 @@
 /* ========== ПРОСМОТРЩИК ЛОГОВ ========== */
 #form-logs-viewer {
-    width: 95%;
+    /* width: 95%; */
     max-width: 1400px;
     min-width: 800px;
     padding: 10px;
     background: rgba(105, 84, 109, 0.911);
     border-radius: 15px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    
 }
 
 .logs-filters {

@@ -124,7 +124,7 @@ void loop() {
         allStair = false;												            // снимаем флаг функции allStairWork()
 
         if (!tumbler && bottom > data_Array[4] && bottom <= data_Array[3]) {		// если не режим выключателя, а нижний датчик больше расстояния выключателя и меньше установленного
-          dataSerial.outData (4, "Zbottom", 1);                                     // сообщение оператору, сработал нижний сенсор
+          dataSerial.outData (4, "Nbottom", 1);                                     // сообщение оператору, сработал нижний сенсор
           myStaircase.move(0, data_Array[10], data_Array[14], 1, 1, 1);					                  // запускаем включение лестницы вверх
           delay (data_Array[12]);
           if (!allStair) {												                                // если не включена вся лестница
@@ -133,7 +133,7 @@ void loop() {
           }
           
         } else if (!tumbler && top > data_Array[4] && top <= data_Array[2]) {		  // аналогично с верхним датчиком
-          dataSerial.outData (4, "Ztop", 1);                                        // сообщение оператору, сработал нижний сенсор  
+          dataSerial.outData (4, "Ntop", 1);                                        // сообщение оператору, сработал нижний сенсор  
           myStaircase.move(0, data_Array[10], data_Array[14], 0, 1, 1);
             delay (data_Array[12]);
             if (!allStair) {

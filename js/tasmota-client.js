@@ -1,11 +1,5 @@
-// tasmota-client.js
 
 let mqttClient = null;
-//let logArea = null;
-
-
-
-// let connectionFlagWiFi = false;
 
 function getBrokerConfig() {
   return {
@@ -17,45 +11,10 @@ function getBrokerConfig() {
   };
 }
 
-/*
-function appendMsg(text) {
-  const dt = new Date().toISOString().slice(5, 19).replace("T", " ");
-  if (!logArea) return;
-  logArea.textContent += `[${dt}] ${text}\n`;
-  logArea.scrollTop = logArea.scrollHeight;
-}
 
-document.addEventListener("DOMContentLoaded", function () {
-  logArea = document.getElementById("messages");
-  if (logArea) {
-    appendMsg("Логирование включено");
-  } else {
-    console.error("Элемент #messages не найден");
-  }
-});
-*/
-/*
-function getBrokerConfig() {
-  return {
-    server: document.getElementById("server").value.trim(),
-    port: parseInt(document.getElementById("port").value, 10),
-    username: document.getElementById("username").value.trim(),
-    password: document.getElementById("password").value.trim(),
-    deviceTopic: document.getElementById("deviceTopic").value.trim(),
-  };
-}
-
-
-function getSubscribeTopics() {
-  const text = document.getElementById("subscribeTopics").value.trim();
-  return text.split(/\n/).map(t => t.trim()).filter(t => t !== "");
-}
-*/
-
-//openTermForm(1);
 // обработчик подключения к устройству по кнопке подключения WiFi
 async function connectionWiFi(form, backform) {
-  openTermForm(1);
+  // openTermForm(1);
   Sound('click');
 	await connectWiFi();		// вызов функции подключения
 
@@ -114,14 +73,11 @@ function connectWiFi(form, backform) {
 
       mqttClient.on("message", (topic, payload) => {
         const text = payload.toString();
-      //  log(`RECV: ${topic} ${text}`, 'in');
-      //  log(text, 'in');
         const content = extractSerial(text);
         if(content){
           receive(content);
         }
-        
-      //  log(content, 'in');
+
       });
 
       mqttClient.on("error", (err) => {
@@ -132,6 +88,7 @@ function connectWiFi(form, backform) {
       mqttClient.on("close", () => {
         log("MQTT отключен");
         connectionFlagWiFi = false;
+        manageStatusTimer();
       });
 
     } catch (e) {
@@ -180,7 +137,6 @@ function publish(topic, payload) {
     if (err) {
       log("PUB ERROR: " + topic + " " + err);
     } else {
-    //  log(`PUB: ${topic} ${payload}`, 'out');
       log(`${payload}`, 'out');
     }
   });
@@ -205,6 +161,7 @@ function disconnectWiFi() {
     mqttClient.end();
     mqttClient = null;
     connectionFlagWiFi = false;
+    manageStatusTimer();
   } else {
     log("Нет активного MQTT клиента");
   }

@@ -574,123 +574,191 @@
 					</div>
 				</div>
 
-				<!-- Форма просмотра логов IndexedDB -->
-			<form id="form-logs-viewer" class="tab-form" style="width: 90%; max-width: 1200px;">
-				<h5 id="h5-logs">Просмотр логов IndexedDB</h5>
-				
-				<!-- Панель фильтров -->
-				<div class="logs-filters">
-					<div class="filter-row">
-						<div class="filter-group">
-							<label>Период:</label>
-							<select id="filter-period">
-								<option value="all">За всё время</option>
-								<option value="today">Сегодня</option>
-								<option value="yesterday">Вчера</option>
-								<option value="week">Последние 7 дней</option>
-								<option value="month">Последние 30 дней</option>
-								<option value="custom">Свои даты</option>
-							</select>
-						</div>
-						
-						<div class="filter-group" id="custom-dates" style="display: none;">
-							<label>с:</label>
-							<input type="date" id="date-from">
-							<label>по:</label>
-							<input type="date" id="date-to">
-						</div>
-						
-						<div class="filter-group">
-							<label>Тип события:</label>
-							<select id="filter-type">
-								<option value="all">Все</option>
-								<option value="send">Отправленные (send)</option>
-								<option value="receive">Полученные (receive)</option>
-								<option value="system">Системные</option>
-								<option value="info">Информация</option>
-								<option value="error">Ошибки</option>
-							</select>
-						</div>
-						
-						<div class="filter-group">
-							<label>Команда:</label>
-							<input type="text" id="filter-command" placeholder="Например: @O, #, !" list="command-list">
-							<datalist id="command-list"></datalist>
-						</div>
-						
-						<div class="filter-group">
-							<button type="button" class="mini-button" id="btn-apply-filters">Применить фильтры</button>
-							<button type="button" class="mini-button" id="btn-reset-filters">Сбросить</button>
-						</div>
-					</div>
-				</div>
-				
-				<!-- Панель управления таблицей -->
-				<div class="logs-toolbar">
-					<span class="logs-count" id="logs-count">Записей: 0</span>
-					<div class="logs-buttons">
-						<button type="button" class="mini-button" id="btn-full-console">Полный вывод</button>
-						<button type="button" class="mini-button" id="btn-export-logs">Экспорт JSON</button>
-						<button type="button" class="mini-button" id="btn-clear-logs">Очистить логи</button>
-						<button type="button" class="mini-button" id="btn-chart-logs">График</button>
-						<button type="button" class="mini-button" id="btn-back-from-logs" onclick="openForm('form-database')">Назад</button>
-					</div>
-				</div>
-				
-				<!-- Таблица с логами (ограниченные колонки) -->
-				<div class="logs-table-container">
-					<table id="logs-table" class="logs-table">
-						<thead>
-							<tr>
-								<th>Дата</th>
-								<th>Команда</th>
-								<th>Данные</th>
-								<th>Тип</th>
-								<th>Действия</th>
-							</tr>
-						</thead>
-						<tbody id="logs-table-body">
-							<tr><td colspan="5">Загрузка данных...</td></tr>
-						</tbody>
-					</table>
-				</div>
-				
-				<!-- Нумерация страниц -->
-				<div class="logs-pagination">
-					<button  class="mini-button" id="btn-prev-page" disabled>Предыдущая</button>
-					<span id="page-info">Страница 1 из 1</span>
-					<button  class="mini-button" id="btn-next-page" disabled>Следующая</button>
-				</div>
-			</form>
+			
 
-			<!-- Модальное окно для полного вывода -->
-			<div id="modal-full-console" class="modal-console">
-				<div class="modal-console-content">
-					<div class="modal-console-header">
-						<span>Полный вывод логов</span>
-						<span class="modal-console-close">&times;</span>
-					</div>
-					<pre id="full-console-output" class="modal-console-body"></pre>
-				</div>
-			</div>
+		</div>
 
-			<!-- Модальное окно для графика -->
-			<div id="modal-chart" class="modal-chart">
-				<div class="modal-chart-content">
-					<div class="modal-chart-header">
-						<span>График событий по времени</span>
-						<span class="modal-chart-close">&times;</span>
+		<!-- Форма просмотра логов IndexedDB -->
+		<form id="form-logs-viewer" class="tab-form">
+			<h5 id="h5-logs">Просмотр логов IndexedDB</h5>
+			
+			<!-- Панель фильтров -->
+			<div class="logs-filters">
+				<div class="filter-row">
+					<div class="filter-group">
+						<label>Период:</label>
+						<select id="filter-period">
+							<option value="all">За всё время</option>
+							<option value="today">Сегодня</option>
+							<option value="yesterday">Вчера</option>
+							<option value="week">Последние 7 дней</option>
+							<option value="month">Последние 30 дней</option>
+							<option value="custom">Свои даты</option>
+						</select>
 					</div>
-					<div class="modal-chart-body">
-						<canvas id="events-chart" width="800" height="400"></canvas>
+					
+					<div class="filter-group" id="custom-dates" style="display: none;">
+						<label>с:</label>
+						<input type="date" id="date-from">
+						<label>по:</label>
+						<input type="date" id="date-to">
 					</div>
-					<div class="modal-chart-footer">
-						<button id="btn-chart-bar">Столбчатая</button>
-						<button id="btn-chart-line">Линейная</button>
+					
+					<div class="filter-group">
+						<label>Тип события:</label>
+						<select id="filter-type">
+							<option value="all">Все</option>
+							<option value="send">Отправленные (send)</option>
+							<option value="receive">Полученные (receive)</option>
+							<option value="system">Системные</option>
+							<option value="info">Информация</option>
+							<option value="error">Ошибки</option>
+						</select>
+					</div>
+					
+					<div class="filter-group">
+						<label>Команда:</label>
+						<input type="text" id="filter-command" placeholder="Например: @O, #, !" list="command-list">
+						<datalist id="command-list"></datalist>
+					</div>
+					
+					<div class="filter-group">
+						<button type="button" class="mini-button" id="btn-apply-filters">Применить фильтры</button>
+						<button type="button" class="mini-button" id="btn-reset-filters">Сбросить</button>
 					</div>
 				</div>
 			</div>
+			
+			<!-- Панель управления таблицей -->
+			<div class="logs-toolbar">
+				<span class="logs-count" id="logs-count">Записей: 0</span>
+				<div class="logs-buttons">
+					<button type="button" id="btn-pair-analyzer" class="mini-button" onclick="openPairAnalyzer()">Анализ пар событий</button>
+					<button type="button" class="mini-button" id="btn-full-console">Полный вывод</button>
+					<button type="button" class="mini-button" id="btn-export-logs">Экспорт JSON</button>
+					<button type="button" class="mini-button" id="btn-clear-logs">Очистить логи</button>
+					<button type="button" class="mini-button" id="btn-chart-logs">График</button>
+					<button type="button" class="mini-button" id="btn-back-from-logs" onclick="openForm('form-app-settings')">Назад</button>
+				</div>
+			</div>
+			
+			<!-- Таблица с логами (ограниченные колонки) -->
+			<div class="logs-table-container">
+				<table id="logs-table" class="logs-table">
+					<thead>
+						<tr>
+							<th>Дата</th>
+							<th>Команда</th>
+							<th>Данные</th>
+							<th>Тип</th>
+							<th>Действия</th>
+						</tr>
+					</thead>
+					<tbody id="logs-table-body">
+						<tr><td colspan="5">Загрузка данных...</td></tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<!-- Нумерация страниц -->
+			<div class="logs-pagination">
+				<button  class="mini-button" id="btn-prev-page" disabled>Предыдущая</button>
+				<span id="page-info">Страница 1 из 1</span>
+				<button  class="mini-button" id="btn-next-page" disabled>Следующая</button>
+			</div>
+		</form>
 
+		<!-- Модальное окно для полного вывода -->
+		<div id="modal-full-console" class="modal-console">
+			<div class="modal-console-content">
+				<div class="modal-console-header">
+					<span>Полный вывод логов</span>
+					<span class="modal-console-close">&times;</span>
+				</div>
+				<pre id="full-console-output" class="modal-console-body"></pre>
+			</div>
+		</div>
+
+		<!-- Модальное окно для графика -->
+		<div id="modal-chart" class="modal-chart">
+			<div class="modal-chart-content">
+				<div class="modal-chart-header">
+					<span>График событий по времени</span>
+					<span class="modal-chart-close">&times;</span>
+				</div>
+				<div class="modal-chart-body">
+					<canvas id="events-chart" width="800" height="400"></canvas>
+				</div>
+				<div class="modal-chart-footer">
+					<button id="btn-chart-bar">Столбчатая</button>
+					<button id="btn-chart-line">Линейная</button>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Модальное окно для анализа пар событий -->
+		<div id="modal-pair-analysis" class="pair-analysis-modal">
+			<div class="pair-analysis-content">
+				<div class="pair-analysis-header">
+					<span>Временной анализ пар событий</span>
+					<span class="pair-analysis-close">&times;</span>
+				</div>
+				<div class="pair-analysis-body">
+					<!-- Выбор событий -->
+					<div class="pair-selector">
+						<div class="pair-select-group">
+							<label>Событие 1 (начало):</label>
+							<select id="event1-select" class="event-select"></select>
+							<input type="text" id="event1-custom" placeholder="Или введите команду вручную" class="event-custom">
+						</div>
+						<div class="pair-select-group">
+							<label>Событие 2 (конец):</label>
+							<select id="event2-select" class="event-select"></select>
+							<input type="text" id="event2-custom" placeholder="Или введите команду вручную" class="event-custom">
+						</div>
+						<div class="pair-select-group">
+							<label>Максимальный интервал (мс):</label>
+							<input type="number" id="max-interval" value="30000" placeholder="макс. интервал между парой">
+							<small>Если интервал больше, пара игнорируется</small>
+						</div>
+						<button id="btn-analyze-pairs" class="analyze-btn">Найти пары</button>
+					</div>
+					
+					<!-- Результаты анализа -->
+					<div id="pairs-results" style="display: none;">
+						<div class="pairs-stats">
+							<span>Найдено пар: <span id="pairs-count">0</span></span>
+							<span>Среднее время: <span id="average-time">-</span> мс</span>
+							<button id="btn-calc-average" class="avg-btn">Вычислить среднее</button>
+							<button id="btn-export-pairs" class="export-btn">Экспорт пар</button>
+						</div>
+						<div class="pairs-table-container">
+							<table id="pairs-table" class="pairs-table">
+								<thead>
+									<tr>
+										<th>№</th>
+										<th>Время события 1</th>
+										<th>Команда 1</th>
+										<th>Время события 2</th>
+										<th>Команда 2</th>
+										<th>Интервал (мс)</th>
+										<th>Интервал (сек)</th>
+									</tr>
+								</thead>
+								<tbody id="pairs-table-body">
+									<tr><td colspan="7">Выберите события и нажмите "Найти пары"</td></tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="pairs-pagination">
+							<button id="btn-pairs-prev" disabled>Предыдущая</button>
+							<span id="pairs-page-info">Страница 1</span>
+							<button id="btn-pairs-next" disabled>Следующая</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		
 		<script src="js/settings.js"></script>
@@ -704,11 +772,19 @@
 		<script src="js/indexeddb.js"></script>
 		<!-- Графики Chart.js -->
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+		<script src="js/command-mapper.js"></script>
 		<script src="js/logs-viewer.js"></script>
+		<script src="js/pair-analyser.js"></script>
 
 		<script type="text/javascript">GetStartSettings()</script>
 		<script type="text/javascript">
 			document.getElementById("form-general").style.display = "block";
+		</script>
+		<script type="text/javascript">
+			// Инициализация анализатора пар
+			if (typeof initPairAnalyser === 'function') {
+				initPairAnalyser();
+			}
 		</script>
 		<!-- <script src="js/companion.js" data-service-worker="sw2.js"></script> -->
 		<script>

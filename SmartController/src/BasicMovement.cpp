@@ -63,6 +63,8 @@ void BasicMovement::move(int initVal, int target, int stepPWM, bool trend, bool 
       }   
       top = TopSensor.Ranging(CM);
       bottom = BottomSensor.Ranging(CM);
+      if (trend && state && top <= data_Array[2]) btSerial.println("400,Utop");
+      if (!trend && state && bottom <= data_Array[3]) btSerial.println("400,Dbottom");
       if ((!trend && top <= data_Array[2]) || (!trend && !state && bottom <= data_Array[3]) ||
          (trend && bottom <= data_Array[3]) || (trend && !state && top <= data_Array[2])) {		// если сработал ????? дописать
         if (top < data_Array[2]) {

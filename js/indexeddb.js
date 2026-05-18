@@ -128,7 +128,7 @@ async function deleteFromIndexedDB(id) {
         
         return new Promise((resolve, reject) => {
             request.onsuccess = function() {
-                console.log('Событие удалено из IndexedDB, id:', id);
+                // console.log('Событие удалено из IndexedDB, id:', id);
                 db.close();
                 resolve(true);
             };
@@ -239,10 +239,10 @@ async function logToIndexedDB(command, direction, data) {
             details: `${direction == 'send' ? 'Отправка' : 'Получение'}: ${command}`
         });
         
-        // Периодически чистим старые записи (оставляем последние 500)
+        // Периодически чистим старые записи (оставляем последние 10000)
         const count = await getIndexedDBCount();
-        if (count > 500) {
-            await pruneOldEvents(400);
+        if (count > 10000) {
+            await pruneOldEvents(8000);
         }
     }
 }

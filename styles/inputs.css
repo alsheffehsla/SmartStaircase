@@ -19,6 +19,16 @@ input {
 			letter-spacing: 40px;
 		}
 	
+		input[id="max-interval"] {
+			width: 150px;
+			height: 20px;
+			color: #fff;
+			font-size: 15px;
+			letter-spacing: 0;
+			padding: 2px 4px;
+			border: 1px solid #e9eaea;
+		}
+
 .mini-input {
 	display: block;
 	font-size: 13px; 

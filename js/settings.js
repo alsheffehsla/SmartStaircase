@@ -249,8 +249,7 @@ async function settingsForm(formNodes) {
 
 			break;
 	  }
-	  
-//      console.log({ name, value, checked })
+
     })
 }
 

@@ -227,3 +227,69 @@ button[id="btn_Skip"] {
 	font-size: 14px;
 	margin-top: 15px;
 }
+
+.analyze-btn {
+    background: #4caf50;
+    color: white;
+    border: none;
+	margin-top: 2px;
+    padding: 8px 20px;
+    border-radius: 6px;
+	font-size: 10px;
+	width: 100px;
+    height: 38px;
+}
+
+.analyze-btn:hover {
+    background: #45a049;
+}
+
+.analyze-btn:active {
+    font-size: 9px;
+    padding: 0px 0px;
+    transition: all 0.2s;
+}
+
+
+.avg-btn, .export-btn {
+    background: #2196f3;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+	width: 100px;
+    height: 38px;
+	font-size: 10px;
+	margin-top: 2px;
+}
+
+.avg-btn:hover, .export-btn:hover {
+    background: #0b7dda;
+}
+
+.avg-btn:active, .export-btn:active {
+    font-size: 10px;
+    padding: 0px 0px;
+    transition: all 0.2s;
+}
+
+.pairs-pagination button {
+    padding: 6px 12px;
+    background: #333;
+    border: none;
+    border-radius: 6px;
+    color: white;
+		width: 100px;
+    height: 38px;
+	font-size: 10px;
+	margin-top: 2px;
+}
+
+.pairs-pagination button:disabled {
+    opacity: 0.5;
+
+}
+
+.pairs-pagination button:hover:not(:disabled) {
+    background: #555;
+}

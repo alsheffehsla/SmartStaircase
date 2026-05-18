@@ -140,7 +140,6 @@ function setupPaginationHandlers() {
         newPrevBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            // console.log('Предыдущая страница, текущая:', currentPage);
             if (currentPage > 1) {
                 currentPage--;
                 renderTable();
@@ -159,7 +158,6 @@ function setupPaginationHandlers() {
             e.preventDefault();
             e.stopPropagation();
             const maxPage = Math.ceil(currentLogsData.length / rowsPerPage);
-            // console.log('Следующая страница, текущая:', currentPage, 'Максимум:', maxPage);
             if (currentPage < maxPage) {
                 currentPage++;
                 renderTable();
@@ -199,8 +197,7 @@ async function applyFiltersAndReload() {
 
 
 async function openLogsViewer() {
-    console.log('openLogsViewer вызвана');
-    
+   
     try {
         // Открываем форму
         openForm('form-logs-viewer');
@@ -220,7 +217,6 @@ async function openLogsViewer() {
         // Обновляем список команд
         updateCommandDatalist();
         
-        console.log('Логи загружены, записей:', currentLogsData.length);
     } catch (error) {
         console.error('Ошибка в openLogsViewer:', error);
     }
@@ -347,7 +343,8 @@ function renderTable() {
         html += `
             <tr>
                 <td style="white-space: nowrap;">${log.date || new Date(log.timestamp).toLocaleString()}</td>
-                <td><code>${escapeHtml(log.command || '-')}</code></td>
+                <!-- <td><code>${escapeHtml(log.command || '-')}</code></td>  -->       <!-- Строка для обычного вывода без подмены описанием -->
+                <td><code>${escapeHtml(CommandMapper.mapToReadable(log.command))}</code></td>
                 <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${escapeHtml((log.data || log.details || '-').substring(0, 50))}</td>
                 <td class="log-type-${log.type || 'info'}">${log.type || 'info'}</td>
                 <td><button class="btn-details" data-id="${log.id}">Подробнее</button></td>
@@ -373,8 +370,7 @@ function updatePaginationButtonsState(currentPageVal, maxPageVal) {
 
 // Показать подробности события
 async function showDetails(id) {
-    // console.log('showDetails вызван для id:', id);
-    
+
     try {
         const allLogs = await readAllFromIndexedDB();
         const log = allLogs.find(l => l.id === id);
