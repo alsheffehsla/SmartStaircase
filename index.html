@@ -10,8 +10,8 @@
 		<link href="styles/inputs.css" rel="stylesheet" type="text/css">
 		<link href="styles/terminal.css" rel="stylesheet" type="text/css">
 		<link href="styles/database.css" rel="stylesheet" type="text/css">
-		<link rel="manifest" href="manifest.json">			<!-- GitHub -->
-	<!-- 	<link rel="manifest" href="/smartstaircase_group/smartstaircase/manifest.json">   -->  <!-- GitLab Petrsu -->
+	<!-- 		<link rel="manifest" href="manifest.json">  -->			<!-- GitHub -->
+		<link rel="manifest" href="/smartstaircase_group/smartstaircase/manifest.json">   <!-- GitLab Petrsu -->
 		<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
@@ -345,8 +345,9 @@
 					<div class="button_pool">
 						<button type="submit" id="btn_Save_Settings_Controller" class="midi-button" onclick="">Записать в<br>контроллер</button>
 						<button type="button" id="btn_Settings_Request" class="midi-button" onclick="getSettings(1)">Получить из<br>контроллера</button>
-						<button type="button" id="btn_Default_Settings" class="midi-button" onclick="getSettings(0)">Заводские<br>настройки</button>
-						<button type="button" id="btn_Back_Menu_Stair" class="midi-button" onclick="openForm('form-menu-stair')">Назад</button>
+						<button type="button" id="btn_Reset_To_Default_Settings" class="midi-button" onclick="confirmReset()">Сбросить к заводским<br>настройкам</button>
+						<button type="button" id="btn_Default_Settings" class="midi-button" onclick="getSettings(0)">Получить заводские<br>настройки</button>
+						<button type="button" id="btn_Back_Menu_Stair" class="button" onclick="openForm('form-menu-stair')">Назад</button>
 					</div>
 				</form>
 				
@@ -792,8 +793,8 @@
 			window.addEventListener("load", () => {
 			  navigator
 				.serviceWorker
-				.register("./sw.js")							//	<!-- GitHub -->
-			//	.register("/smartstaircase_group/smartstaircase/sw.js")		//	<!-- GitLab Petrsu -->
+			//	.register("./sw.js")							//	<!-- GitHub -->
+				.register("/smartstaircase_group/smartstaircase/sw.js")		//	<!-- GitLab Petrsu -->
 				.then((registration) => {
 				  console.log("ServiceWorker зарегистрирован:", registration.scope);
 				})

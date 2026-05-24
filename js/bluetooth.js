@@ -173,12 +173,10 @@ function sendBt(data) {
     return;
   }
 
-  if (data == '@O') clearInterval(timerID);
-  
   if (data.length > 20) {
     data += '|';
 	let chunks = data.match(/(.|[\r\n]){1,19}/g);
-//	chunks += '|';
+  //	chunks += '|';
 	chunks[0] += '^';
 	log(chunks[0], 'out');
 	// console.log(chunks[0]);

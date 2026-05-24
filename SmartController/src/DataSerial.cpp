@@ -37,7 +37,7 @@ bool DataSerial::dataAvailable(){
       delay(1);                                     // маленькая задержка (без нее коряво работает)
   }
 
-  // здесь проверяем длинные пакеты с данными для настроек. Общий пакет разбит на части по 20 Байт и содержит дополнительные символы //  
+  // здесь проверяем длинные пакеты с данными для настроек. Общий пакет разбит на части по 20 или 60 Байт и содержит дополнительные символы //  
   if (dataIn.endsWith("^")) {                        // если принятая строка заканчивается на промежуточный символ "^"
       dataCollect += dataIn.substring(0, dataIn.length() - 1);     // сохраняем строку без последнего символа   
       dataCollect.replace("^",""); 
@@ -46,8 +46,6 @@ bool DataSerial::dataAvailable(){
     if (dataCollect.endsWith("|")) {                                // если строка заканчивается "|" (конец посылки)
       dataCollect = dataCollect.substring(1, dataCollect.length() - 2);       // обрезаем первый (#) и два последних символа (#|) строки
       outData(3, "Set.receive", 0);                                     // сообщение оператору, данные получены
-//      Serial.print("dataCollect : ");
-//      Serial.println(dataCollect);
       getSettings(dataCollect);                                         // парсим строку
       dataCollect = "";                                             // обнуляем накопленную подстроку
       }
@@ -77,7 +75,7 @@ void DataSerial::dataParse() {
     //::::::: Блок разбора и сохранения настроек ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
       case 0x23:                                     // (ASCII '#')  
         if (command.endsWith("#")) {                              // если строка заканчивается #
-          command = command.substring(0, command.length() - 1);       // обрезаем последний символ строки            
+          command = command.substring(0, command.length() - 1);       // обрезаем последний символ строки          
           getSettings(command);                                       // парсим строку
         } else {
           outData(2, command, 0);               // иначе - сообщение пользователю "Неверные данные"
@@ -220,6 +218,7 @@ bool DataSerial::arrayComparison (){            //
 
 //------------ Блок парсера пользовательских настроек с записью в память и рабочий массив --------------------------------------------------
 void DataSerial::getSettings (String data) {                      // получаем блок данных (строка с данными и разделителями)
+
   String temp;
   int addr, val;
   do {                                                        // выполнить

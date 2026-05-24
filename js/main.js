@@ -143,6 +143,7 @@ sendForm.addEventListener('submit', function(event) {
 
 //////////////////////////////////////////// Распределение каналов отправки /////////////////////////////////////////////////
 function sendOut(data){
+	if (data !== '@O') clearInterval(timerID);
 	dataInput = '';
 	if(connectionFlagWiFi){
 		sendWiFi(data); 			// Отправить по WiFi

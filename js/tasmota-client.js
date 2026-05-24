@@ -152,7 +152,17 @@ function sendWiFi(data) {
     return;
   }
 
-  publish(topic, msg);    // отправка сообщения
+  if (data.length > 60) {
+    data += '|';
+    let chunks = data.match(/(.|[\r\n]){1,60}/g);
+    for (let i = 0; i < chunks.length; i++) {
+      chunks[i] += '^';
+      setTimeout(() => {
+          publish(topic, chunks[i]);
+        },i*500);
+    }
+    log(data, 'out');
+  } else publish(topic, msg);    // отправка сообщения
 }
 
 function disconnectWiFi() {

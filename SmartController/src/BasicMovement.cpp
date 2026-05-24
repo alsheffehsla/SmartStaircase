@@ -76,7 +76,7 @@ void BasicMovement::move(int initVal, int target, int stepPWM, bool trend, bool 
 
         currentMotionTime = millis();																		// запоминаем текущее время 
         if (currentMotionTime - startMotionTime >= (unsigned long)data_Array[6]) {		// если текущее время больше времени старта на установленное значение
-          Serial.println(currentMotionTime - startMotionTime);
+          // Serial.println(currentMotionTime - startMotionTime);
           startMotionTime = currentMotionTime;													// сбросим стартовое время
           allStepsOn();																						    // вызываем ф-ю включения всей лестницы
           return;

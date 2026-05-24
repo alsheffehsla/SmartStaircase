@@ -477,6 +477,8 @@ async function serializeForm(formNode) {
   })
   
 	let dataOut = '#';
+	let vals = {};
+
   filtered.forEach((val) => {
 	  switch (val.name) {
 		  case 'number_of_steps':
@@ -538,6 +540,13 @@ async function serializeForm(formNode) {
 		dataOut = '';
 }
 
+// Сброс к заводским настройкам
+function confirmReset(){
+	if (confirm('Вы уверены, что хотите сбросить к заводским настройкам?')) {
+    	sendOut('*');   // отправка команды на сброс
+	}
+}
+
 
 // Загрузка настроек лестницы по нажатию кнопок Загрузить настройки, Заводские настройки//
 async function getSettings(val) {
@@ -545,9 +554,18 @@ async function getSettings(val) {
 	dataInput = '';
 	dataExchange = false;
 	if (val) {									// если true
-		sendOut('&');									// запрос данных из рабочего массива		
-	} else sendOut('%');								// если false запрос данных из дефолтного массива
-await	setTimeout(downloadSettings, 2000);				// через таймаут получить данные
+		sendOut('&');									// запрос данных из рабочего массива
+	await	setTimeout(downloadSettings, 2000);				// через таймаут получить данные		
+	} else {
+		sendOut('%');								// если false запрос данных из дефолтного массива
+		setTimeout(() => {
+			dataDefaultCheck = dataInput;   // после downloadSettings
+			downloadSettings();           // синхронный вызов
+		}, 2000);
+
+		//await	setTimeout(downloadSettings, 2000);				// через таймаут получить данные
+		//dataDefaultCheck = dataInput;
+	}
 }
 
 // загрузка настроек лестницы
